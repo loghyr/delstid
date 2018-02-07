@@ -1,0 +1,40 @@
+<!-- Copyright (C) The IETF Trust (2018) -->
+<!-- Copyright (C) The Internet Society (2018) -->
+
+<section anchor="sec:intro" title="Introduction">
+  <t>
+    In the Network File System version4 (NFSv4) a client
+    may be granted a delegation for a file. This allows the
+    client to act as the authority of the file's metadata
+    and data. In this document,
+    we introduce some new semnatics to the delegation process
+    which allows the client to update the server with both
+    the access and modify times.
+    It becomes an extension of NFSv4.2
+    <xref target='RFC7862' /> and is built on top of the
+    external data representation (XDR) <xref target='RFC4506' />
+    generated from <xref target='RFC7863' />.
+
+    <cref anchor='AI1 ' source='TH'>Document what we need!</cref>.
+  </t>
+
+  <section anchor='sec:defs' title='Definitions'>
+    <t>
+      <list style='hanging'>
+        <t hangText='ACE -'>
+        </t>
+        <t hangText='ACL -'>
+        </t>
+      </list>
+    </t>
+  </section>
+  <section title="Requirements Language">
+    <t>
+      The key words &quot;MUST&quot;, &quot;MUST NOT&quot;,
+      &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL NOT&quot;,
+      &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,
+      &quot;MAY&quot;, and &quot;OPTIONAL&quot; in this document are to be
+      interpreted as described in <xref target="RFC2119" />.
+    </t>
+  </section>
+</section>
