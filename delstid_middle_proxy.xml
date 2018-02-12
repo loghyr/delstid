@@ -1,0 +1,33 @@
+<!-- Copyright (C) The IETF Trust (2018) -->
+<!-- Copyright (C) The Internet Society (2018) -->
+
+<section anchor="sec:proxy" title="Proxying of Times">
+  <t>
+    When a client is granted a write delegation on a file, it is the authority
+    for the file. If another client wants to know the size
+    of the file, it queries the server, which in turn uses a CB_GETATTR
+    to query the client which holds the delegation (see Section 20.1 of
+    <xref target='RFC5661' />. For either the access or modify time,
+    the server need not query the client with the delegation.  When
+    the client returns the delegation via a DELEGRETURN (see
+    section 18.6 of <xref target='RFC5661' />), it need not update the
+    attributes to the server.
+  </t>
+
+  <t>
+    If the server is a metadata server, it may have to query the
+    storage devices for the access and modify times of the data
+    file. If we let A1 and M1 be the respective access and modify
+    times of the data file when the file was opened, then the access
+    and modify times on the metadata file can be calculated by the
+    difference of the final times on the data file.
+  </t>
+
+  <t>
+    With a server is a proxy for a NFSv4 server, it is a client
+    to the NFSv4 server and during file I/O, it may get a delegation
+    on a file. The client of the proxy would be querying the
+    proxy for attributes and not the NFSv4 server. 
+  </t>
+
+</section>
