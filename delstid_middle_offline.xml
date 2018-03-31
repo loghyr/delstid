@@ -1,0 +1,47 @@
+<!-- Copyright (C) The IETF Trust (2018) -->
+<!-- Copyright (C) The Internet Society (2018) -->
+
+<section anchor="sec:offline" title="Offline Files">
+  <t>
+    If a file is archived or offline, it metadata portion
+    is available to the file server, but the data content is
+    not available.  Thus a compound with a GETATTR or READDIR
+    can report the file's attributes without bringing the
+    file online.  However, either an OPEN or a LAYOUTGET
+    might cause the file server to retrieve the archived
+    data contents, bringin the file online.  If an operating
+    system is not aware that the file is offline, it might
+    inadvertantly open the file to determine what type of
+    file it is accessing. (cite Windows and Mac Finder).
+  </t>
+
+   <t>
+    By adding the new attribute FATTR4_OFFLINE, a client
+    can predetermine the avaiablity of the file, avoiding the
+    need to open it at all. Note that being offline might
+    also mean that the file is archived in the cloud, i.e.,
+    there can be an expense in both retrieving the file
+    to bring online and in sending the file back to offline
+    status.
+  </t>
+
+    <t>
+      &lt;CODE BEGINS&gt;
+    </t>
+
+<figure>
+ <artwork>
+/// typedef bool            fattr4_offline;
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+/// const FATTR4_OFFLINE            = 83;
+ </artwork>
+</figure>
+
+    <t>
+      &lt;CODE ENDS&gt;
+    </t>
+</section>
