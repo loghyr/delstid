@@ -3,6 +3,39 @@
 
 <section anchor="sec:proxy" title="Proxying of Times">
   <t>
+    &lt;CODE BEGINS&gt;
+  </t>
+
+<figure>
+ <artwork>
+///
+/// /*
+///  * attributes for the delegation times being
+///  * cached and served by the "client"
+///  */
+/// typedef nfstime4        fattr4_time_deleg_access;
+/// typedef nfstime4        fattr4_time_deleg_modify;
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// %/*
+/// % * New RECOMMENDED Attribute for
+/// % * delegation caching of times
+/// % */
+/// const FATTR4_TIME_DELEG_ACCESS  = 84;
+/// const FATTR4_TIME_DELEG_MODIFY  = 85;
+///
+ </artwork>
+</figure>
+
+  <t>
+    &lt;CODE ENDS&gt;
+  </t>
+  <t>
     When a client is granted a write delegation on a file, it is the authority
     for the file. If another client wants to know the size
     of the file, it queries the server, which in turn uses a CB_GETATTR

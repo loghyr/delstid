@@ -25,23 +25,27 @@
     status.
   </t>
 
-    <t>
-      &lt;CODE BEGINS&gt;
-    </t>
+  <t>
+    &lt;CODE BEGINS&gt;
+  </t>
 
 <figure>
  <artwork>
+///
 /// typedef bool            fattr4_offline;
+///
  </artwork>
 </figure>
 
 <figure>
  <artwork>
+///
 /// const FATTR4_OFFLINE            = 83;
+///
  </artwork>
 </figure>
 
-    <t>
-      &lt;CODE ENDS&gt;
-    </t>
+  <t>
+    &lt;CODE ENDS&gt;
+  </t>
 </section>
