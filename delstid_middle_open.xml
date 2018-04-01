@@ -176,7 +176,7 @@
     even if requested. In order to not send an open stateid,
     the server can indicate that fact with the result flag
     of OPEN4_RESULT_NO_OPEN_STATEID. The open stateid field,
-    OPEN4resok.stateid (see Section 18.16.2 of <xref target="RFC5661" />,
+    OPEN4resok.stateid (see Section 18.16.2 of <xref target="RFC5661" />),
     should also be set to the special all zero stateid.
   </t>
 </section>
