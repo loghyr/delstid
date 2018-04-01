@@ -1,0 +1,182 @@
+<!-- Copyright (C) The IETF Trust (2018) -->
+<!-- Copyright (C) The Internet Society (2018) -->
+
+<section anchor="sec:open_args" title="Determining the Arguments to OPEN">
+  <t>
+    &lt;CODE BEGINS&gt;
+  </t>
+
+<figure>
+ <artwork>
+///
+/// struct open_arguments4 {
+///   bitmap4  oa_share_access;
+///   bitmap4  oa_share_deny;
+///   bitmap4  oa_share_access_want;
+///   bitmap4  oa_open_claim;
+///   bitmap4  oa_create_mode;
+/// };
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// enum open_args_share_access4 = {
+///    OPEN_ARGS_SHARE_ACCESS_READ  = 0;
+///    OPEN_ARGS_SHARE_ACCESS_WRITE = 1;
+///    OPEN_ARGS_SHARE_ACCESS_BOTH  = 2;
+/// };
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// enum open_args_share_deny4 = {
+///    OPEN_ARGS_SHARE_DENY_NONE  = 0;
+///    OPEN_ARGS_SHARE_DENY_READ  = 1;
+///    OPEN_ARGS_SHARE_DENY_WRITE = 2;
+/// };
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// enum open_args_share_access4 = {
+///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 0;
+///    OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            = 1;
+///    OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              = 2;
+///    OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
+///                                                    = 3;
+///    OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED 
+///                                                    = 4;
+///    OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    = 5;
+///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 6;
+/// };
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// enum open_args_share_access4 = {
+///    OPEN_ARGS_CLAIM_NULL          = 0;
+///    OPEN_ARGS_CLAIM_PREVIOUS      = 1;
+///    OPEN_ARGS_CLAIM_DELEGATE_CUR  = 2;
+///    OPEN_ARGS_CLAIM_DELEGATE_PREV = 3;
+///    OPEN_ARGS_CLAIM_FH            = 4;
+///    OPEN_ARGS_CLAIM_DELEG_CUR_FH  = 5;
+///    OPEN_ARGS_CLAIM_DELEG_PREV_FH = 6;
+/// };
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// enum open_args_share_access4 = {
+///    OPEN_ARGS_CREATE_MODE_GUARDED    = 0;
+///    OPEN_ARGS_CREATE_MODE_EXCLUSIVE  = 1;
+/// };
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// typedef open_arguments4 fattr4_open_arguments;
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// %/*
+/// % * Determine what OPEN4 supports.
+/// % */
+/// const FATTR4_OPEN_ARGUMENTS     = 86;
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
+///
+ </artwork>
+</figure>
+
+  <t>
+    &lt;CODE ENDS&gt;
+  </t>
+
+  <t>
+    <xref target="RFC8178" /> (see Section 4.4.2) allows for extending
+    the microversion of the NFSv4.x protocol without increasing the
+    microversion.  The client can probe the capabilities of the server
+    and based on that result, determine if both it and the server support
+    features not specified in the main microversion documuent.
+  </t>
+
+  <t>
+    The XDR extensions presented in this section allow for the OPEN
+    procedure to be extended in such a fashion. It models all of the
+    parameters via bitmap4 data structures, which allows for the
+    addition of a new flag to any of the OPEN arguments (see Section
+    18.16.1 of <xref target="RFC5661" />. Two new flags are provided:
+    <list style='symbols'>
+      <t>OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION (see Section <xref target='sec:proxy' />)</t>
+      <t>OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS</t>
+    </list>
+    Subsequent documents can use this framework to introduce
+    new functionality to OPEN.
+  </t>
+
+  <t>
+    This section extends the OPEN procedure to allow it to return
+    either an open or delegation stateid. The file is said to be "open"
+    to the client as long as the count of open and delegated stateids
+    is greater than 0.  Either type of stateid is suffucient to
+    keep the file open, which allows READ, WRITE, LOCK, and LAYOUTGET
+    operations to proceed. If the client gets both a open and a
+    delegation stateid as part of the OPEN, then it has to return
+    them both.  And during each operation, the client can send
+    a costly GETATTR.
+  </t>
+
+  <t>
+    If the client knows that the server supports the
+    OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag (as determined
+    by an earlier GETATTR operation which queried for the
+    FATTR4_OPEN_ARGUMENTS attribute), then the client can
+    supply that flag during the OPEN and only get either
+    an open or delegation stateid.
+  </t>
+
+  <t>
+    The client is already prepared to not get a delegation stateid
+    even if requested. In order to not send an open stateid,
+    the server can indicate that fact with the result flag
+    of OPEN4_RESULT_NO_OPEN_STATEID. The open stateid field,
+    OPEN4resok.stateid (see Section 18.16.2 of <xref target="RFC5661" />,
+    should also be set to the special all zero stateid.
+  </t>
+</section>
