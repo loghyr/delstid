@@ -26,16 +26,16 @@
     &lt;CODE ENDS&gt;
   </t>
   <t>
-    If a file is archived or offline, it metadata portion
+    If a file is archived or offline, then the metadata portion
     is available to the file server, but the data content is
     not available.  Thus a compound with a GETATTR or READDIR
     can report the file's attributes without bringing the
     file online.  However, either an OPEN or a LAYOUTGET
     might cause the file server to retrieve the archived
-    data contents, bringin the file online.  If an operating
+    data contents, bringing the file online.  If an operating
     system is not aware that the file is offline, it might
     inadvertantly open the file to determine what type of
-    file it is accessing. (cite Windows and Mac Finder).
+    file it is accessing. <cref anchor='AI2 ' source='TH'>Document these OSes!</cref>
   </t>
 
    <t>
