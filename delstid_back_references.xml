@@ -92,11 +92,11 @@
 
   <reference anchor='RFC8178'>
     <front>
-      <title>Fill me in..</title>
+      <title>Rules for NFSv4 Extensions and Minor Versions</title>
       <author initials="D." surname="Noveck" fullname="D. Noveck">
         <organization>NetApp</organization>
       </author>
-      <date year="2017" month="November"/>
+      <date year="2017" month="July"/>
     </front>
     <seriesInfo name="RFC" value="8178"/>
   </reference>
