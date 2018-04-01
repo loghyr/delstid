@@ -18,6 +18,11 @@
       </t>
 
       <t>
+        during the OPEN procedure, get either the open
+        or delegation stateids, but not both.
+      </t>
+
+      <t>
         detect an offline file, which may be located off premise.
       </t>
 
@@ -25,11 +30,6 @@
         cache both the access and modify times, reducing the
         number of times the client needs to go to the server
         to get that information.
-      </t>
-
-      <t>
-        during the OPEN procedure, get either the open
-        or delegation stateids, but not both.
       </t>
     </list>
 
