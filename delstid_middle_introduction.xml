@@ -7,23 +7,51 @@
     may be granted a delegation for a file. This allows the
     client to act as the authority of the file's metadata
     and data. In this document,
-    we introduce some new semnatics to the delegation process
-    which allows the client to update the server with both
-    the access and modify times.
-    It becomes an extension of NFSv4.2
-    <xref target='RFC7862' /> and is built on top of the
+    we introduce some new semnatics to both the open and
+    the delegation process
+    which allows the client to: 
+
+    <list style='symbols'>
+      <t>
+        determine the extension of OPEN
+        (see Section 18.16 of <xref target="RFC5661" />) flags.
+      </t>
+
+      <t>
+        detect an offline file, which may be located off premise.
+      </t>
+
+      <t>
+        cache both the access and modify times, reducing the
+        number of times the client needs to go to the server
+        to get that information.
+      </t>
+
+      <t>
+        during the OPEN procedure, get either the open
+        or delegation stateids, but not both.
+      </t>
+    </list>
+
+    Using the process detailed in <xref target="RFC8178" />,
+    the revisions in this document become an extension of NFSv4.2
+    <xref target='RFC7862' />. They are built on top of the
     external data representation (XDR) <xref target='RFC4506' />
     generated from <xref target='RFC7863' />.
-
-    <cref anchor='AI1 ' source='TH'>Document what we need!</cref>.
   </t>
 
   <section anchor='sec:defs' title='Definitions'>
     <t>
       <list style='hanging'>
-        <t hangText='delegation -'>
+        <t hangText='delegation:'> A file delegation, which is
+          a recallable lock that assures the holder that inconsistent
+          opens and file changes cannot occur so long as the
+          delegation is held.
         </t>
-        <t hangText='stateid -'>
+        <t hangText='stateid:'>  A stateid is a 128-bit quantity
+          returned by a server that uniquely defines state held
+          by the server for the client. (See Section 8 of
+          <xref target="RFC5661" />)
         </t>
       </list>
     </t>
