@@ -90,4 +90,15 @@
     <seriesInfo name="RFC" value="7863"/>
   </reference>
 
+  <reference anchor='RFC8178'>
+    <front>
+      <title>Fill me in..</title>
+      <author initials="D." surname="Noveck" fullname="D. Noveck">
+        <organization>NetApp</organization>
+      </author>
+      <date year="2017" month="November"/>
+    </front>
+    <seriesInfo name="RFC" value="8178"/>
+  </reference>
+
 </references>

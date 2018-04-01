@@ -53,6 +53,12 @@ sh extract.sh &lt; spec.txt &gt; delstid_prot.x
     uint64_t.
   </t>
 
+  <t>
+    While the XDR can be appeneded to that from <xref target='RFC7863' />,
+    the various code snippets belong in their respective areas of the
+    that XDR.
+  </t>
+
   <section anchor="code_copyright" title="Code Components Licensing Notice">
     <t>
       Both the XDR description and the scripts used for extracting
