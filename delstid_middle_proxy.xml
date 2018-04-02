@@ -44,32 +44,99 @@
   <t>
     &lt;CODE ENDS&gt;
   </t>
+
   <t>
     When a client is granted a write delegation on a file, it is the authority
-    for the file. If another client wants to know the size
-    of the file, it queries the server, which in turn uses a CB_GETATTR
-    to query the client which holds the delegation (see Section 20.1 of
-    <xref target='RFC5661' />. For either the access or modify time,
-    the server need not query the client with the delegation.  When
-    the client returns the delegation via a DELEGRETURN (see
-    section 18.6 of <xref target='RFC5661' />), it need not update the
-    attributes to the server.
+    for the file. If the server queries the client as to the state of the
+    file via a CB_GETATTR (see Section 20.1 of
+    <xref target='RFC5661' />), then it can only determine the size of
+    the file. Likewise, if the client holding the delegation wants
+    to know either of the access, modify, or change times, it has to
+    send a GETATTR to the server. While it is the authority for these
+    values, it has no way to guarantee these values after the
+    delegation has been returned. And as such, it can not pass these
+    times up to an application expecting posix compliance. <cref anchor='AI3 ' source='TH'>Cite</cref>
   </t>
 
   <t>
-    If the server is a metadata server, it may have to query the
-    storage devices for the access and modify times of the data
-    file. If we let A1 and M1 be the respective access and modify
-    times of the data file when the file was opened, then the access
-    and modify times on the metadata file can be calculated by the
-    difference of the final times on the data file.
+    With the addition of the new flag:
+    OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS, the client and server can
+    negiotiate that the client will be the authority for these values
+    and upon return of the delegation stateid via a DELEGRETURN (see
+    section 18.6 of <xref target='RFC5661' />), the times will be passed
+    back to the server. If the server is queried by another client for
+    either the size or the times, it will need to use a CB_GETATTR to
+    query the client which holds the delegation (see Section 20.1 of
+    <xref target='RFC5661' />).
   </t>
 
   <t>
-    With a server is a proxy for a NFSv4 server, it is a client
-    to the NFSv4 server and during file I/O, it may get a delegation
-    on a file. The client of the proxy would be querying the
-    proxy for attributes and not the NFSv4 server. 
+    If a server informs the client via the FATTR4_OPEN_ARGUMENTS attribute
+    that it supports OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS and
+    it returns a valid delegation stateid for an OPEN operation which
+    sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag,
+    then it MUST be able to query the client via a CB_GETATTR for the
+    FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
+    attribute. (The change time can be derived from the modify
+    time.) Further, when it gets a SETATTR (see Section 18.30 of
+    <xref target='RFC5661' />) in the same compound as the DELEGRETURN,
+    then it MUST accept those FATTR4_TIME_DELEG_ACCESS attribute and
+    FATTR4_TIME_DELEG_MODIFY attribute changes and derive the change
+    time or reject the changes with NFS4ERR_DELAY.
   </t>
 
+  <t>
+    A key prequisite of this approach is that the server and client
+    are in time synchronization with each other.  Note that while
+    the base NFSv4.2 does not require such synchronization, the
+    use of RPCSEC_GSS typically makes such a requirement. When the
+    client presents either FATTR4_TIME_DELEG_ACCESS or FATTR4_TIME_DELEG_MODIFY
+    attributes to the server, the server MUST decide whether the
+    times presented are before the old times or past the current time.
+    If the time presented is before the original time, then the
+    update is ignored. If the time presented is in the future, the
+    server can either clamp the new time to the current time, or
+    it may return NFS4ERR_DELAY to the client, allowing it to retry.
+    Note that if the clock skew is large, this policy will result
+    in access to the file being denied until such time that the
+    clock skew is exceeded.
+  </t>
+
+  <t>
+   A change in the access time MUST not advance the change time, also
+   known as the time_metadata attribute (see Section 5.8.2.42 of
+   <xref target='RFC5661' />), but a
+   change in the modify time might advance the change time (and in turn
+   the change attribute (See Section 5.8.1.4 of <xref target='RFC5661' />).
+   If the modify time is greater than the change time and before the
+   current time, then the change time is adjusted to the modify time
+   and not the current time (as is most likely done on most SETATTR
+   calls that change the metadata). If the modify time is in the
+   future, it will be clamped to the current time.
+  </t>
+
+  <t>
+   Note that each of the possible times, access, modify, and change, are
+   compared to the current time. They should all be compared against
+   the same time value for the current time. I.e., do not retrieve
+   a different value of the current time for each calculation.
+  </t>
+
+  <t>
+   If the client sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
+   flag in an OPEN operation, then it MUST support the FATTR4_TIME_DELEG_ACCESS
+   and FATTR4_TIME_DELEG_MODIFY attributes both in the CB_GETATTR
+   and SETATTR operations.
+  </t>
+
+  <section anchor="sec:proxy:use" title="Use case">
+    <t>
+      With a server is a proxy for a NFSv4 server, it is a client
+      to the NFSv4 server and during file I/O, it may get a delegation
+      on a file. The client of the proxy would be querying the
+      proxy for attributes and not the NFSv4 server.  Each GETATTR
+      from that client would result in at least one additional
+      GETATTR being sent across the wire.
+    </t>
+  </section>
 </section>
