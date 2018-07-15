@@ -40,7 +40,7 @@
 
    <t>
     By adding the new attribute FATTR4_OFFLINE, a client
-    can predetermine the avaiablity of the file, avoiding the
+    can predetermine the availablity of the file, avoiding the
     need to open it at all. Note that being offline might
     also mean that the file is archived in the cloud, i.e.,
     there can be an expense in both retrieving the file
