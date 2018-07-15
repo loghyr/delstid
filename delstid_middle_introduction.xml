@@ -7,7 +7,7 @@
     may be granted a delegation for a file. This allows the
     client to act as the authority of the file's metadata
     and data. In this document,
-    we introduce some new semnatics to both the open and
+    we introduce some new semantics to both the open and
     the delegation process
     which allows the client to: 
 

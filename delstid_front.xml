@@ -50,8 +50,8 @@
         to both open a file and be granted a delegation of
         that file.  This grants the client
         the right to cache metadata on the file locally.
-        This document presents serveral refinements to
-        both the opeing and delegating of the file to the
+        This document presents several refinements to
+        both the opening and delegating of the file to the
         client.
       </t>
     </abstract>

@@ -133,7 +133,7 @@
     the microversion of the NFSv4.x protocol without increasing the
     microversion.  The client can probe the capabilities of the server
     and based on that result, determine if both it and the server support
-    features not specified in the main microversion documuent.
+    features not specified in the main microversion docuument.
   </t>
 
   <t>
@@ -143,7 +143,7 @@
     addition of a new flag to any of the OPEN arguments (see Section
     18.16.1 of <xref target="RFC5661" />. Two new flags are provided:
     <list style='symbols'>
-      <t>OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION (see Section <xref target='sec:proxy' />)</t>
+      <t>OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION (see <xref target='sec:proxy' />)</t>
       <t>OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS</t>
     </list>
     Subsequent documents can use this framework to introduce

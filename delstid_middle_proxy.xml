@@ -86,7 +86,7 @@
   </t>
 
   <t>
-    A key prequisite of this approach is that the server and client
+    A key prerequisite of this approach is that the server and client
     are in time synchronization with each other.  Note that while
     the base NFSv4.2 does not require such synchronization, the
     use of RPCSEC_GSS typically makes such a requirement. When the
@@ -131,7 +131,7 @@
 
   <section anchor="sec:proxy:use" title="Use case">
     <t>
-      With a server is a proxy for a NFSv4 server, it is a client
+      When a server is a proxy for a NFSv4 server, it is a client
       to the NFSv4 server and during file I/O, it may get a delegation
       on a file. The client of the proxy would be querying the
       proxy for attributes and not the NFSv4 server.  Each GETATTR
