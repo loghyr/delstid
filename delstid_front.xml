@@ -18,7 +18,23 @@
           <code>94022</code>
           <country>USA</country>
         </postal>
-        <email>loghyr@hammer.space</email>
+        <email>loghyr@hammerspace.com</email>
+      </address>
+    </author>
+
+    <author fullname="Trond Myklebust"
+            initials="T."
+            surname="Myklebust">
+      <organization abbrev="Hammerspace">Hammerspace</organization>
+      <address>
+        <postal>
+          <street>4300 El Camino Real Ste 105</street>
+          <city> Los Altos</city>
+          <region>CA</region>
+          <code>94022</code>
+          <country>USA</country>
+        </postal>
+        <email>trondmy@hammerspace.com</email>
       </address>
     </author>
 
