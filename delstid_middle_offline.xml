@@ -25,23 +25,35 @@
   <t>
     &lt;CODE ENDS&gt;
   </t>
+
   <t>
-    If a file is archived or offline, then the metadata portion
+    If a file is offline, then the metadata portion
     is available to the file server, but the data content is
-    not available.  Thus a compound with a GETATTR or READDIR
+    not readily available.  The cost of retrieving the
+    data content is expensive, to the extent that the
+    content should only be retrieved if it is going to be
+    used.  A graphical file manager (such as OSX's Finder)
+    may want to access the beginning of the file to preview it for an
+    user who is hovering his pointer over the file name.
+    If the file is retrived, it will most likely either
+    be immediately thrown away or returned.
+  </t>
+
+  <t>
+    A compound with a GETATTR or READDIR
     can report the file's attributes without bringing the
     file online.  However, either an OPEN or a LAYOUTGET
     might cause the file server to retrieve the archived
     data contents, bringing the file online.  If an operating
     system is not aware that the file is offline, it might
     inadvertantly open the file to determine what type of
-    file it is accessing. <cref anchor='AI2 ' source='TH'>Document these OSes!</cref>
+    file it is accessing.
   </t>
 
    <t>
     By adding the new attribute FATTR4_OFFLINE, a client
     can predetermine the availablity of the file, avoiding the
-    need to open it at all. Note that being offline might
+    need to open it at all. Being offline might
     also mean that the file is archived in the cloud, i.e.,
     there can be an expense in both retrieving the file
     to bring online and in sending the file back to offline
