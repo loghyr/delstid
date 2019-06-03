@@ -11,6 +11,10 @@
 
     <list style='symbols'>
       <t>
+        detect an offline file, which may be located off premise.
+      </t>
+
+      <t>
         determine the extension of OPEN
         (see Section 18.16 of <xref target="RFC5661" />) flags.
       </t>
@@ -18,10 +22,6 @@
       <t>
         during the OPEN procedure, get either the open
         or delegation stateids, but not both.
-      </t>
-
-      <t>
-        detect an offline file, which may be located off premise.
       </t>
 
       <t>
@@ -50,7 +50,7 @@
     <t>
       <list style='hanging'>
         <t hangText='delegation:'> A file delegation, which is
-          a recallable lock that assures the holder that inconsistent
+          a recall-able lock that assures the holder that inconsistent
           opens and file changes cannot occur so long as the
           delegation is held.
         </t>
