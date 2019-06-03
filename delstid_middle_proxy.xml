@@ -3,49 +3,6 @@
 
 <section anchor="sec:proxy" title="Proxying of Times">
   <t>
-    &lt;CODE BEGINS&gt;
-  </t>
-
-<figure>
- <artwork>
-///
-/// /*
-///  * attributes for the delegation times being
-///  * cached and served by the "client"
-///  */
-/// typedef nfstime4        fattr4_time_deleg_access;
-/// typedef nfstime4        fattr4_time_deleg_modify;
-///
- </artwork>
-</figure>
-
-<figure>
- <artwork>
-///
-/// %/*
-/// % * New RECOMMENDED Attribute for
-/// % * delegation caching of times
-/// % */
-/// const FATTR4_TIME_DELEG_ACCESS  = 84;
-/// const FATTR4_TIME_DELEG_MODIFY  = 85;
-///
- </artwork>
-</figure>
-
-<figure>
- <artwork>
-///
-/// const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000;
-///
- </artwork>
-</figure>
-
-
-  <t>
-    &lt;CODE ENDS&gt;
-  </t>
-
-  <t>
     When a client is granted a write delegation on a file, it is the authority
     for the file. If the server queries the client as to the state of the
     file via a CB_GETATTR (see Section 20.1 of
@@ -55,7 +12,7 @@
     send a GETATTR to the server. While it is the authority for these
     values, it has no way to guarantee these values after the
     delegation has been returned. And as such, it can not pass these
-    times up to an application expecting posix compliance. <cref anchor='AI3 ' source='TH'>Cite</cref>
+    times up to an application expecting posix compliance.
   </t>
 
   <t>
@@ -129,7 +86,7 @@
    and SETATTR operations.
   </t>
 
-  <section anchor="sec:proxy:use" title="Use case">
+  <section anchor="ssec:proxy:use" title="Use case">
     <t>
       When a server is a proxy for a NFSv4 server, it is a client
       to the NFSv4 server and during file I/O, it may get a delegation
@@ -138,5 +95,50 @@
       from that client would result in at least one additional
       GETATTR being sent across the wire.
     </t>
+  </section>
+
+  <section anchor="ssec:proxy:xdr" title="XDR for Proxying of Times">
+  <t>
+    &lt;CODE BEGINS&gt;
+  </t>
+
+<figure>
+ <artwork>
+///
+/// /*
+///  * attributes for the delegation times being
+///  * cached and served by the "client"
+///  */
+/// typedef nfstime4        fattr4_time_deleg_access;
+/// typedef nfstime4        fattr4_time_deleg_modify;
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// %/*
+/// % * New RECOMMENDED Attribute for
+/// % * delegation caching of times
+/// % */
+/// const FATTR4_TIME_DELEG_ACCESS  = 84;
+/// const FATTR4_TIME_DELEG_MODIFY  = 85;
+///
+ </artwork>
+</figure>
+
+<figure>
+ <artwork>
+///
+/// const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000;
+///
+ </artwork>
+</figure>
+
+
+  <t>
+    &lt;CODE ENDS&gt;
+  </t>
   </section>
 </section>
