@@ -1,7 +1,7 @@
 <!-- Copyright (C) The IETF Trust (2014) -->
 <!-- Copyright (C) The Internet Society (2014) -->
 
-<section anchor="xdr_desc" title="XDR Description of the Flexible File Layout Type">
+<section anchor="xdr_desc" title="Extraction of XDR">
   <t>
     This document contains the external data representation (XDR)
     <xref target='RFC4506' /> description of the new open
