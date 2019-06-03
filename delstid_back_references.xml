@@ -3,6 +3,17 @@
 
 <references title="Normative References">
 
+  <reference anchor='RFC1813'>
+    <front>
+        <title>NFS Version 3 Protocol Specification</title>
+      <author>
+        <organization>IETF</organization>
+      </author>
+      <date month='June' year='1995'/>
+    </front>
+    <seriesInfo name='RFC' value='1813' />
+  </reference>
+
     <reference anchor='RFC2119'>
       <front>
       <title abbrev='RFC Key Words'>Key words for use in RFCs to Indicate Requirement Levels</title>

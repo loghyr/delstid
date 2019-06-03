@@ -3,13 +3,11 @@
 
 <section anchor="sec:intro" title="Introduction">
   <t>
-    In the Network File System version4 (NFSv4) a client
-    may be granted a delegation for a file. This allows the
-    client to act as the authority of the file's metadata
-    and data. In this document,
-    we introduce some new semantics to both the open and
-    the delegation process
-    which allows the client to: 
+    In the Network File System version4 (NFSv4) a client may be granted
+    a delegation for a file. This allows the client to act as the
+    authority of the file's metadata and data. In this document, we
+    introduce some new semantics to both the open and the delegation
+    process which allows the client to:
 
     <list style='symbols'>
       <t>
@@ -31,8 +29,16 @@
         number of times the client needs to go to the server
         to get that information.
       </t>
-    </list>
 
+      <t>
+        for clients using Parallel NFS (pNFS) (see Section 12 of
+        <xref target="RFC5661" />), periodically report the
+        attributes of the data files to the metadata server.
+      </t>
+    </list>
+  </t>
+
+  <t>
     Using the process detailed in <xref target="RFC8178" />,
     the revisions in this document become an extension of NFSv4.2
     <xref target='RFC7862' />. They are built on top of the
@@ -52,6 +58,15 @@
           returned by a server that uniquely defines state held
           by the server for the client. (See Section 8 of
           <xref target="RFC5661" />)
+        </t>
+        <t hangText='weak cache consistency (WCC):'>  In NFSv3,
+          operations are not sent in a compound, hence the client would
+          have to perform two round trips to the server in order to
+          determine the result of modification to the state of a file
+          or directory.  With WCC, the server can return post-operation
+          attributes on such operations. As these do not provide a strict
+          consistency between the server and client, the client is free to
+          ignore the data.  (See Section 2.6 of <xref target='RFC1813' />)
         </t>
       </list>
     </t>
