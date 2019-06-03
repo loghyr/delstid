@@ -1,15 +1,15 @@
-# Copyright (C) The IETF Trust (2018)
+# Copyright (C) The IETF Trust (2019)
 #
 
 YEAR=`date +%Y`
 MONTH=`date +%B`
 DAY=`date +%d`
 PREVVERS=00
-VERS=00
+VERS=01
 
 XML2RFC=xml2rfc
 
-BASEDOC=draft-ietf-nfsv4-deleg-stateids
+BASEDOC=draft-haynes-nfsv4-deleg-stateids
 DOC_PREFIX=delstid
 
 autogen/%.xml : %.x
