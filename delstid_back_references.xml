@@ -112,4 +112,17 @@
     <seriesInfo name="RFC" value="8178"/>
   </reference>
 
+  <reference anchor='RFC8435'>
+    <front>
+      <title>Parallel NFS (pNFS) Flexible File Layout</title>
+        <author initials="B." surname="Halevy" fullname="B. Halevy">
+        </author>
+        <author initials="T." surname="Haynes" fullname="T. Haynes">
+          <organization>Primary Data</organization>
+        </author>
+      <date year="2018" month="August"/>
+    </front>
+    <seriesInfo name="RFC" value="8435"/>
+  </reference>
+
 </references>

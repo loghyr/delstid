@@ -1,0 +1,53 @@
+<!-- Copyright (C) The IETF Trust (2019) -->
+<!-- Copyright (C) The Internet Society (2019) -->
+
+<section anchor="sec:wcc" title="Layout Weak Cache Consistency">
+  <t>
+    When using pNFS (See Section 12 of <xref target='RFC5661' />),
+    the client is most likely to be performing file operations to the
+    storage device and not the metadata server. With some layout types
+    (most notably the flexible files layout type in <xref target='RFC8435' />)
+    there is no control protocol between the metadata server and the
+    storage device. In order to update the metadata state of the file,
+    the metadata server will need to track the metadata state of the
+    data file - once the layout is issued, it is not able to see the
+    NFSv3 file operations from the client to the storage device. Thus
+    the metadata server will be required to query the storage device
+    for the data file attributes.
+  </t>
+
+  <t>
+    For example, with a flexible files layout type, the metadata server
+    would issue a NFSv3 GETATTR to the storage device. These queries are
+    most likely triggered in response to a NFSv4 GETATTR to the metadata
+    server. Not only are these GETATTRs to the storage device individually
+    expensive, the storage device can become inundated by a storm of such
+    requests. NFSv3 solved a similar issue by having the READ and WRITE
+    operations employ a post-operation attribute to report the weak cache
+    consistency (WCC) data (See Section 2.6 of <xref target='RFC1813' />).
+  </t>
+
+  <t>
+    Each NFSv3 operation corresponds to one round trip between the client
+    and server. So a WRITE followed by a GETATTR would require two round
+    trips. In that scenario, the attribute information retrieved is
+    considered to be strict server-client consistency for a cache
+    consistency protocol. For NFSv4, the WRITE and GETATTR can be issued
+    together inside a compound, which only requires one round trip
+    between the client and server. And this is also considered to be
+    a strict server-client consistency. In essence, the NFSv4 READ and WRITE
+    operations drop the post-operation attributes, allowing the client
+    to decide if it needs that information.
+  </t>
+
+  <t>
+    With the flexible files layout type, the client can leverage the NFSv3
+    WCC to service the proxying of times (See <xref target='sec:proxy' />).
+    But the granularity of this data is limited. With client
+    side mirroring (See Section 8 of <xref target='RFC8435' />), the
+    client has to aggregate the N mirrored files in order to send one
+    piece of information instead of N pieces of information. Also, the
+    client is limited to sending that information only when it returns
+    the delegation.
+  </t>
+</section>
