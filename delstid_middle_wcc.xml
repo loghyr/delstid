@@ -77,6 +77,27 @@
       client is limited to sending that information only when it returns
       the delegation.
     </t>
+
+    <t>
+      The current filehandle and the lowa_stateid identifies the
+      particular layout for the LAYOUT_WCC operation. The lowa_type
+      indicates how to unpack the layout type specific payload inside
+      the lowa_body field. The lowa_type is defined to be a value from
+      the IANA registry for "pNFS Layout Types Registry".
+    </t>
+
+    <t>
+      The lowa_body will contain the data file attributes. The client
+      will be responsible for mapping the NFSv3 post-operation attributes
+      to those in a fattr4.  Just as the post-operation attributes may be
+      ignored by the client, the server may ignore the attributes inside
+      the LAYOUT_WCC.  But the server can also use those attributes to
+      avoid querying the storage device for the data file attributes.
+      Note that as these attributes are optional and there is nothing
+      the client can do if the server ignores one, there is no need
+      to return a bitmap4 of which attributes were accepted in the
+      result of the LAYOUT_WCC.
+    </t>
   </section>
 
   <section anchor="ss:op_LAYOUT_WCC:ff" title="Flex Files Layout Type">
@@ -101,7 +122,7 @@
     <t>
       The flex file layout type specific results MUST correspond to the
       ff_layout4 data structure as defined in Section 5.1 of <xref target='RFC8435' />.
-      There is a one-to-one correspondance between:
+      There is a one-to-one correspondence between:
 
       <list style='symbols'>
         <t> ff_data_server4 -&gt; ff_data_server_wcc4 </t>
@@ -112,6 +133,11 @@
       Each ff_layout4 has an array of ff_mirror4, which have an array of ff_data_server4.
       Based on the current filehandle and the lowa_stateid, the server can match the
       reported attributes.
+    </t>
+
+    <t>
+      The ffdsw_attributes are processed similar to the obj_attributes in
+      the SETATTR arguments (See Section 18.30 of <xref target='RFC5661' />).
     </t>
   </section>
 </section>
