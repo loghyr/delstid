@@ -100,11 +100,61 @@
     </t>
   </section>
 
+  <section anchor="ss:op_LAYOUT_WCC:errs" title="Allowed Errors">
+    <t>
+      The LAYOUT_WCC operation can raise the errors in
+      <xref target='tbl:op_error_returns' />. When an error
+      is encountered, the metadata server can decide to ignore
+      the entire operation or depending on the layout type
+      specific payload, it could decide to apply a portion
+      of the payload.
+    </t>
+
+    <texttable anchor='tbl:op_error_returns'>
+      <preamble>Valid Error Returns for LAYOUT_WCC</preamble>
+      <ttcol align="left">Errors</ttcol>
+
+      <c>
+        NFS4ERR_ADMIN_REVOKED,
+        NFS4ERR_BADXDR,
+        NFS4ERR_BAD_STATEID,
+        NFS4ERR_DEADSESSION,
+        NFS4ERR_DELAY,
+        NFS4ERR_DELEG_REVOKED,
+        NFS4ERR_EXPIRED,
+        NFS4ERR_FHEXPIRED,
+        NFS4ERR_GRACE,
+        NFS4ERR_INVAL,
+        NFS4ERR_ISDIR,
+        NFS4ERR_MOVED,
+        NFS4ERR_NOFILEHANDLE,
+        NFS4ERR_NOTSUPP,
+        NFS4ERR_NO_GRACE,
+        NFS4ERR_OLD_STATEID,
+        NFS4ERR_OP_NOT_IN_SESSION,
+        NFS4ERR_REP_TOO_BIG,
+        NFS4ERR_REP_TOO_BIG_TO_CACHE,
+        NFS4ERR_REQ_TOO_BIG,
+        NFS4ERR_RETRY_UNCACHED_REP,
+        NFS4ERR_SERVERFAULT,
+        NFS4ERR_STALE,
+        NFS4ERR_TOO_MANY_OPS,
+        NFS4ERR_UNKNOWN_LAYOUTTYPE,
+        NFS4ERR_WRONG_CRED,
+        NFS4ERR_WRONG_TYPE
+      </c>
+    </texttable>
+
+  </section>
+
   <section anchor="ss:op_LAYOUT_WCC:ff" title="Flex Files Layout Type">
 <figure>
  <artwork>
 &lt;CODE BEGINS&gt;
 /// struct ff_data_server_wcc4 {
+///             deviceid4            ffdsw_deviceid;
+///             stateid4             ffdsw_stateid;
+///             nfs_fh4              ffdsw_fh_vers&lt;&gt;;
 ///             fattr4               ffdsw_attributes;
 /// };
 /// 
@@ -120,9 +170,9 @@
 </figure>
 
     <t>
-      The flex file layout type specific results MUST correspond to the
+      The flex file layout type specific results SHOULD correspond to the
       ff_layout4 data structure as defined in Section 5.1 of <xref target='RFC8435' />.
-      There is a one-to-one correspondence between:
+      There SHOULD be a one-to-one correspondence between:
 
       <list style='symbols'>
         <t> ff_data_server4 -&gt; ff_data_server_wcc4 </t>
@@ -133,6 +183,24 @@
       Each ff_layout4 has an array of ff_mirror4, which have an array of ff_data_server4.
       Based on the current filehandle and the lowa_stateid, the server can match the
       reported attributes.
+    </t>
+
+    <t>
+      But the positional correspondence between the elements is not
+      sufficient to determine the attributes to update. Consider the
+      case where a layout had three mirrors and two of them had updated
+      attributes, but the third did not. A client could decide to present
+      all three mirrors, with one mirror having an attribute mask with
+      no attributes present. Or it could decide to present only the
+      two mirrors which had been changed.
+    </t>
+
+    <t>
+      In either case, the combination of ffdsw_deviceid, ffdsw_stateid, and
+      ffdsw_fh_vers will uniquely identify the attributes to be updated.
+      All three arguments are required. A layout might have multiple data
+      files on the same storage device, in which case the ffdsw_deviceid and
+      ffdsw_stateid would match, but the ffdsw_fh_vers would not.
     </t>
 
     <t>
