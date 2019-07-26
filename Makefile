@@ -9,7 +9,7 @@ VERS=00
 
 XML2RFC=xml2rfc
 
-BASEDOC=draft-ietf-nfsv4-deleg-stateids
+BASEDOC=draft-ietf-nfsv4-delstid
 DOC_PREFIX=delstid
 
 autogen/%.xml : %.x
