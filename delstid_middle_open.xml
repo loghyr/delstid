@@ -81,9 +81,9 @@
  <artwork>
 ///
 /// enum open_args_share_access4 {
-///    OPEN_ARGS_SHARE_ACCESS_READ  = 0,
-///    OPEN_ARGS_SHARE_ACCESS_WRITE = 1,
-///    OPEN_ARGS_SHARE_ACCESS_BOTH  = 2
+///    OPEN_ARGS_SHARE_ACCESS_READ  = 1,
+///    OPEN_ARGS_SHARE_ACCESS_WRITE = 2,
+///    OPEN_ARGS_SHARE_ACCESS_BOTH  = 3
 /// };
 ///
  </artwork>
@@ -106,15 +106,15 @@
  <artwork>
 ///
 /// enum open_args_share_access_want4 {
-///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 0,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            = 1,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              = 2,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 3,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            = 4,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              = 5,
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
-///                                                    = 3,
+///                                                    = 17,
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED 
-///                                                    = 4,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    = 5,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 6
+///                                                    = 18,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    = 20,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21
 /// };
 ///
  </artwork>
