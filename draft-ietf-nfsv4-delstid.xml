@@ -1,171 +1,159 @@
 <?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE rfc [
-  <!ENTITY nbsp    "&#160;">
-  <!ENTITY zwsp   "&#8203;">
-  <!ENTITY nbhy   "&#8209;">
-  <!ENTITY wj     "&#8288;">
-]>
-<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<!-- Copyright (C) The IETF Trust (2014) -->
-<!-- Copyright (C) The Internet Society (2014) -->
-<!-- XML source for the Delegation Stateid  internet draft document -->
-<!-- To generate text with the xml2rfc tool tclsh8.3 xml2rfc.tcl 
-     xml2rfc this_file.xml that_file.txt which puts the formatted 
-     text into that_file.txt -->
-<!-- processing instructions (for a complete list and description,
-     see file http://xml.resource.org/authoring/README.html -->
-<!-- try to enforce the ID-nits conventions and DTD validity -->
-<?rfc strict="yes" ?>
-<!-- items used when reviewing the document -->
-<?rfc comments="yes" ?>
-<!-- controls display of <cref> elements -->
-<?rfc inline="yes" ?>
-<!-- when no, put comments at end in comments section,
-                                otherwise, put inline -->
-<?rfc editing="no" ?>
-<!-- when yes, insert editing marks -->
-<!-- create table of contents (set it options).  
-     Note the table of contents may be omitted
-     for very short documents -->
-<?rfc toc="yes"?>
-<?rfc tocompact="yes"?>
-<?rfc tocdepth="3"?>
-<!-- choose the options for the references. Some like
-     symbolic tags in the references (and citations)
-     and others prefer numbers. -->
-<?rfc symrefs="yes"?>
-<?rfc sortrefs="yes" ?>
-<!-- these two save paper: start new paragraphs from the same page etc. -->
-<?rfc compact="yes" ?>
-<?rfc subcompact="no" ?>
-<!-- end of list of processing instructions -->
-<rfc category="std" ipr="trust200902" docName="draft-ietf-nfsv4-delstid-01" obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="3" symRefs="true" sortRefs="true" version="3">
-  <!-- xml2rfc v2v3 conversion 3.12.8 -->
-  <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+<!DOCTYPE rfc SYSTEM "rfc2629-xhtml.ent">
+<?xml-stylesheet type="text/xsl" href="rfc2629.xslt"?>
+
+<rfc
+ category="std"
+ docName="draft-ietf-nfsv4-delstid-latest"
+ ipr="trust200902"
+ obsoletes=""
+ scripts="Common,Latin"
+ sortRefs="true"
+ submissionType="IETF"
+ symRefs="true"
+ tocDepth="3"
+ tocInclude="true"
+ updates="8881"
+ version="3"
+ xml:lang="en">
 
 <front>
-    <title abbrev="Deleg Stateid">
-      Extending the Opening of Files in NFSv4.2
-    </title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-nfsv4-delstid-01.txt"/>
-    <author fullname="Thomas Haynes" initials="T." surname="Haynes">
-      <organization abbrev="Hammerspace">Hammerspace</organization>
-      <address>
-        <email>loghyr@hammerspace.com</email>
-      </address>
-    </author>
-    <author fullname="Trond Myklebust" initials="T." surname="Myklebust">
-      <organization abbrev="Hammerspace">Hammerspace</organization>
-      <address>
-        <email>trondmy@hammerspace.com</email>
-      </address>
-    </author>
-    <date year="2022" month="June" day="02"/>
-    <area>Transport</area>
-    <workgroup>NFSv4</workgroup>
-    <keyword>NFSv4</keyword>
-    <abstract>
-      <t>
-        The Network File System v4 (NFSv4) allows a client to both open
-        a file and be granted a delegation of that file.  This provides
-        the client the right to cache metadata on the file locally.
-        This document presents several refinements to both the opening
-        and delegating of the file to the client.
-      </t>
-    </abstract>
-  </front>
-  <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+  <title abbrev="Deleg Stateid">
+    Extending the Opening of Files in NFSv4.2
+  </title>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-nfsv4-delstid-latest"/>
+  <author fullname="Thomas Haynes" initials="T." surname="Haynes">
+    <organization abbrev="Hammerspace">Hammerspace</organization>
+    <address>
+      <email>loghyr@hammerspace.com</email>
+    </address>
+  </author>
+  <author fullname="Trond Myklebust" initials="T." surname="Myklebust">
+    <organization abbrev="Hammerspace">Hammerspace</organization>
+    <address>
+      <email>trondmy@hammerspace.com</email>
+    </address>
+  </author>
+  <date year="2022" month="December" day="10"/>
+  <area>Transport</area>
+  <workgroup>Network File System Version 4</workgroup>
+  <keyword>NFSv4</keyword>
+  <abstract>
+    <t>
+      The Network File System v6 (NFSv4) allows a client to both open
+      a file and be granted a delegation of that file.  This provides
+      the client the right to cache metadata on the file locally.
+      This document presents several refinements to
+      <xref target="RFC8881" format="default" sectionFormat="of"/> for
+      both the opening and delegating of the file  to the client.
+    </t>
+  </abstract>
+
+  <note removeInRFC="true">
+    <t>
+      Discussion of this draft takes place
+      on the NFSv4 working group mailing list (nfsv4@ietf.org),
+      which is archived at
+      <eref target="https://mailarchive.ietf.org/arch/browse/nfsv4/"/>.
+      Working Group information can be found at
+      <eref target="https://datatracker.ietf.org/wg/nfsv4/about/"/>.
+    </t>
+  </note>
+</front>
 
 <middle>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
 
-<section anchor="sec_intro" numbered="true" toc="default">
-      <name>Introduction</name>
-      <t>
+<section anchor="sec_intro" numbered="true" removeInRFC="false" toc="default">
+  <name>Introduction</name>
+  <t>
     In the Network File System version4 (NFSv4) a client may be granted
     a delegation for a file. This allows the client to act as the
     authority of the file's metadata and data. In this document, we
     introduce some new semantics to both the open and the delegation
     process which allows the client to:
+  </t>
+  <ul spacing="normal">
+    <li>
+      detect an offline file, which may be located off premise.
+    </li>
+    <li>
+      determine the extension of OPEN (see Section 18.16 of <xref
+      target="RFC8881" format="default" sectionFormat="of"/>) flags.
+    </li>
+    <li>
+      during the OPEN procedure, get either the open
+      or delegation stateids, but not both.
+    </li>
+    <li>
+      cache both the access and modify times, reducing the
+      number of times the client needs to go to the server
+      to get that information.
+    </li>
+    <li>
+      for clients using Parallel NFS (pNFS) (see Section 12 of
+      <xref target="RFC8881" format="default" sectionFormat="of"/>),
+      periodically report the attributes of the data files to the
+      metadata server.
+    </li>
+  </ul>
 
-      </t>
-      <ul spacing="normal">
-        <li>
-        detect an offline file, which may be located off premise.
-      </li>
-        <li>
-        determine the extension of OPEN
-        (see Section 18.16 of <xref target="RFC5661" format="default"/>) flags.
-      </li>
-        <li>
-        during the OPEN procedure, get either the open
-        or delegation stateids, but not both.
-      </li>
-        <li>
-        cache both the access and modify times, reducing the
-        number of times the client needs to go to the server
-        to get that information.
-      </li>
-        <li>
-        for clients using Parallel NFS (pNFS) (see Section 12 of
-        <xref target="RFC5661" format="default"/>), periodically report the
-        attributes of the data files to the metadata server.
-      </li>
-      </ul>
-      <t>
-    Using the process detailed in <xref target="RFC8178" format="default"/>,
-    the revisions in this document become an extension of NFSv4.2
-    <xref target="RFC7862" format="default"/>. They are built on top of the
-    external data representation (XDR) <xref target="RFC4506" format="default"/>
-    generated from <xref target="RFC7863" format="default"/>.
-      </t>
-      <section anchor="sec_defs" numbered="true" toc="default">
-        <name>Definitions</name>
-        <dl newline="false" spacing="normal">
-          <dt>delegation:</dt>
-          <dd> A file delegation, which is
-          a recall-able lock that assures the holder that inconsistent
-          opens and file changes cannot occur so long as the
-          delegation is held.
-        </dd>
-          <dt>stateid:</dt>
-          <dd>  A stateid is a 128-bit quantity
-          returned by a server that uniquely defines state held
-          by the server for the client. (See Section 8 of
-          <xref target="RFC5661" format="default"/>)
-        </dd>
-          <dt>weak cache consistency (WCC):</dt>
-          <dd>  In NFSv3,
-          operations are not sent in a compound, hence the client would
-          have to perform two round trips to the server in order to
-          determine the result of modification to the state of a file
-          or directory.  With WCC, the server can return post-operation
-          attributes on such operations. As these do not provide a strict
-          consistency between the server and client, the client is free to
-          ignore the data.  (See Section 2.6 of <xref target="RFC1813" format="default"/>)
-        </dd>
-        </dl>
-      </section>
-      <section numbered="true" toc="default">
+  <t>
+    Using the process detailed in <xref target="RFC8178" format="default"
+    sectionFormat="of"/>, the revisions in this document become an
+    extension of NFSv4.2 <xref target="RFC7862" format="default"
+    sectionFormat="of"/>. They are built on top of the external data
+    representation (XDR) <xref target="RFC4506" format="default"
+    sectionFormat="of"/> generated from <xref target="RFC7863"
+    format="default" sectionFormat="of"/>.
+  </t>
+
+  <section anchor="sec_defs" numbered="true" removeInRFC="false" toc="default">
+    <name>Definitions</name>
+    <dl newline="false" spacing="normal">
+      <dt>delegation:</dt>
+      <dd>
+        A file delegation, which is a recall-able lock that assures the
+        holder that inconsistent opens and file changes cannot occur so
+        long as the delegation is held.
+      </dd>
+      <dt>stateid:</dt>
+      <dd> 
+        A stateid is a 128-bit quantity returned by a server that uniquely
+        defines state held by the server for the client. (See Section
+        8 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
+      </dd>
+      <dt>weak cache consistency (WCC):</dt>
+      <dd>
+        In NFSv4, operations are not sent in a compound, hence the client
+        would have to perform two round trips to the server in order
+        to determine the result of modification to the state of a file
+        or directory.  With WCC, the server can return post-operation
+        attributes on such operations. As these do not provide a strict
+        consistency between the server and client, the client is free
+        to ignore the data.  (See Section 2.6 of <xref target="RFC1813"
+        format="default" sectionFormat="of"/>)
+      </dd>
+    </dl>
+      </section> <section numbered="true" removeInRFC="false"
+      toc="default">
         <name>Requirements Language</name>
-        <t>
-      The key words "MUST", "MUST NOT",
-      "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED",
-      "MAY", and "OPTIONAL" in this document are to be
-      interpreted as described in <xref target="RFC2119" format="default"/>.
-        </t>
-      </section>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+    <t>
+      The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>",
+      "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>", "<bcp14>SHALL
+      NOT</bcp14>", "<bcp14>SHOULD</bcp14>", "<bcp14>SHOULD NOT</bcp14>",
+      "<bcp14>RECOMMENDED</bcp14>", "<bcp14>NOT RECOMMENDED</bcp14>",
+      "<bcp14>MAY</bcp14>", and "<bcp14>OPTIONAL</bcp14>" in this
+      document are to be interpreted as described in BCP&nbsp;14 <xref
+      target="RFC2119" format="default" sectionFormat="of"/> <xref
+      target="RFC8174" format="default" sectionFormat="of"/> when,
+      and only when, they appear in all capitals, as shown here.
+    </t>
+  </section>
+</section>
 
-<section anchor="sec_offline" numbered="true" toc="default">
-      <name>Offline Files</name>
-      <t>
+<section anchor="sec_offline" numbered="true" removeInRFC="false" toc="default">
+  <name>Offline Files</name>
+  <t>
     If a file is offline, then the server locally has the file's
     attributes, but not the file's content. It has to be able to present
     to the client enough information to describe the file, but the content
@@ -176,8 +164,8 @@
     for an user who is hovering his pointer over the file name.  If the
     file is retrieved, it will most likely either be immediately thrown
     away or returned.
-      </t>
-      <t>
+  </t>
+  <t>
     A compound with a GETATTR or READDIR can report the file's attributes
     without bringing the file online.  However, either an OPEN or a
     LAYOUTGET might cause the file server to retrieve the archived
@@ -187,8 +175,8 @@
     the data content to be retrieved. But when the LAYOUTGET operation
     is processed, a layout type specific mapping will cause the data
     content to be retrieved from offline storage.
-      </t>
-      <t>
+  </t>
+  <t>
     If an operating system is not aware that the file is offline, it
     might inadvertently open the file to determine what type of file it is
     accessing.  By adding the new attribute FATTR4_OFFLINE, a client can
@@ -196,88 +184,90 @@
     it at all. Being offline might also mean that the file is archived
     in the cloud, i.e., there can be an expense in both retrieving the
     file to bring online and in sending the file back to offline status.
-      </t>
-      <t>
-    &lt;CODE BEGINS&gt;
-      </t>
-      <artwork name="" type="" align="left" alt=""><![CDATA[
+  </t>
+  <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// typedef bool            fattr4_offline;
 ///
- ]]></artwork>
-      <artwork name="" type="" align="left" alt=""><![CDATA[
+]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const FATTR4_OFFLINE            = 83;
 ///
- ]]></artwork>
-      <t>
-    &lt;CODE ENDS&gt;
-      </t>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+]]>
+  </sourcecode>
+</section>
 
-<section anchor="sec_open_args" numbered="true" toc="default">
-      <name>Determining the Arguments to OPEN</name>
-      <t>
-    The OPEN (See Section 18.16 of <xref target="RFC5661" format="default"/>) procedure
-    returns an open stateid to the client to reference the state of
-    the file.  The client could also request a delegation stateid in
-    the OPEN arguements.  The file is said to be "open" to the client as
-    long as the count of open and delegated stateids is greater than 0.
-    Either type of stateid is suffucient to keep the file open, which
-    allows READ (See Section 18.22 of <xref target="RFC5661" format="default"/>), WRITE
-    (See Section 18.2 of <xref target="RFC5661" format="default"/>), LOCK (See Section
-    18.10 of <xref target="RFC5661" format="default"/>), and LAYOUTGET (see Section 18.43
-    of <xref target="RFC5661" format="default"/>) operations to proceed. If the client
-    gets both a open and a delegation stateid as part of the OPEN, then
-    it has to return them both.  And during each operation, the client can
-    send a costly GETATTR (See Section 18.7 of <xref target="RFC5661" format="default"/>).
-      </t>
-      <t>
+<section anchor="sec_open_args" numbered="true" removeInRFC="false" toc="default">
+  <name>Determining the Arguments to OPEN</name>
+  <t>
+    The OPEN (See Section 18.16 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>) procedure returns an
+    open stateid to the client to reference the state of the file.
+    The client could also request a delegation stateid in the OPEN
+    arguements.  The file is said to be "open" to the client as long
+    as the count of open and delegated stateids is greater than 0.
+    Either type of stateid is suffucient to keep the file open,
+    which allows READ (See Section 18.25 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>), WRITE (See Section 18.38
+    of <xref target="RFC8881" format="default" sectionFormat="of"/>),
+    LOCK (See Section 18.12 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>), and LAYOUTGET (see Section 18.50 of <xref
+    target="RFC8881" format="default" sectionFormat="of"/>) operations
+    to proceed. If the client gets both a open and a delegation stateid
+    as part of the OPEN, then it has to return them both.  And during
+    each operation, the client can send a costly GETATTR (See Section
+    18.9 of <xref target="RFC8881" format="default" sectionFormat="of"/>).
+  </t>
+  <t>
     If the client knows that the server supports the
-    OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag (as determined
-    by an earlier GETATTR operation which queried for the
-    FATTR4_OPEN_ARGUMENTS attribute), then the client can
-    supply that flag during the OPEN and only get either
-    an open or delegation stateid.
-      </t>
-      <t>
-    The client is already prepared to not get a delegation stateid
-    even if requested. In order to not send an open stateid,
-    the server can indicate that fact with the result flag
-    of OPEN4_RESULT_NO_OPEN_STATEID. The open stateid field,
-    OPEN4resok.stateid (see Section 18.16.2 of <xref target="RFC5661" format="default"/>),
-    should also be set to the special all zero stateid.
-      </t>
-      <section anchor="ssec_open_args_xdr" numbered="true" toc="default">
-        <name>XDR Modifications to OPEN</name>
-        <t>
-      <xref target="RFC8178" format="default"/> (see Section 4.4.2) allows for extending
-      the microversion of the NFSv4.x protocol without increasing the
-      microversion.  The client can probe the capabilities of the server
-      and based on that result, determine if both it and the server support
-      features not specified in the main microversion docuument.
-        </t>
-        <t>
+    OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag (as determined by an
+    earlier GETATTR operation which queried for the FATTR4_OPEN_ARGUMENTS
+    attribute), then the client can supply that flag during the OPEN
+    and only get either an open or delegation stateid.
+  </t>
+  <t>
+    The client is already prepared to not get a delegation
+    stateid even if requested. In order to not send an open
+    stateid, the server can indicate that fact with the result
+    flag of OPEN4_RESULT_NO_OPEN_STATEID. The open stateid field,
+    OPEN4resok.stateid (see Section 18.16.2 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>), should also be set to the
+    special all zero stateid.
+  </t>
+
+  <section anchor="ssec_open_args_xdr" numbered="true" removeInRFC="false" toc="default">
+    <name>XDR Modifications to OPEN</name>
+    <t>
+      <xref target="RFC8178" format="default" sectionFormat="of"/>
+      (see Section 4.4.2) allows for extending the microversion of the
+      NFSv4.x protocol without increasing the microversion.  The client
+      can probe the capabilities of the server and based on that result,
+      determine if both it and the server support features not specified
+      in the main microversion docuument.
+    </t>
+    <t>
       The XDR extensions presented in this section allow for the OPEN
-      procedure to be extended in such a fashion. It models all of the
-      parameters via bitmap4 data structures, which allows for the
-      addition of a new flag to any of the OPEN arguments (see Section
-      18.16.1 of <xref target="RFC5661" format="default"/>). Two new flags are provided:
-        </t>
-        <ul spacing="normal">
-          <li>OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION (see <xref target="sec_proxy" format="default"/>)</li>
-          <li>OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS</li>
-        </ul>
-        <t>
+      procedure to be extended in such a fashion. It models all of
+      the parameters via bitmap4 data structures, which allows for
+      the addition of a new flag to any of the OPEN arguments (see
+      Section 18.16.1 of <xref target="RFC8881" format="default"
+      sectionFormat="of"/>). Two new flags are provided:
+    </t>
+    <ul spacing="normal">
+      <li>
+        OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION (see <xref target="sec_proxy" format="default" sectionFormat="of"/>)
+      </li>
+      <li>
+        OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
+      </li>
+    </ul>
+    <t>
       Subsequent documents can use this framework to introduce
       new functionality to OPEN.
-        </t>
-        <t>
-      &lt;CODE BEGINS&gt;
-        </t>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+    </t>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// struct open_arguments4 {
 ///   bitmap4  oa_share_access;
@@ -287,8 +277,9 @@
 ///   bitmap4  oa_create_mode;
 /// };
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_access4 {
 ///    OPEN_ARGS_SHARE_ACCESS_READ  = 1,
@@ -296,8 +287,9 @@
 ///    OPEN_ARGS_SHARE_ACCESS_BOTH  = 3
 /// };
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_deny4 {
 ///    OPEN_ARGS_SHARE_DENY_NONE  = 0,
@@ -306,8 +298,9 @@
 ///    OPEN_ARGS_SHARE_DENY_BOTH  = 3
 /// };
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_access_want4 {
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 3,
@@ -321,8 +314,9 @@
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21
 /// };
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_open_claim4 {
 ///    OPEN_ARGS_OPEN_CLAIM_NULL          = 0,
@@ -334,8 +328,9 @@
 ///    OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH = 6
 /// };
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_createmode4 {
 ///    OPEN_ARGS_CREATEMODE_UNCHECKED4     = 0,
@@ -344,78 +339,80 @@
 ///    OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1  = 3
 /// };
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// typedef open_arguments4 fattr4_open_arguments;
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// %/*
 /// % * Determine what OPEN4 supports.
 /// % */
 /// const FATTR4_OPEN_ARGUMENTS     = 86;
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
 ///
- ]]></artwork>
-        <t>
-      &lt;CODE ENDS&gt;
-        </t>
-      </section>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+ ]]>
+    </sourcecode>
+  </section>
+</section>
 
-<section anchor="sec_proxy" numbered="true" toc="default">
-      <name>Proxying of Times</name>
-      <t>
-    When a client is granted a write delegation on a file, it is the authority
-    for the file. If the server queries the client as to the state of the
-    file via a CB_GETATTR (see Section 20.1 of
-    <xref target="RFC5661" format="default"/>), then it can only determine the size of
-    the file. Likewise, if the client holding the delegation wants
-    to know either of the access, modify, or change times, it has to
-    send a GETATTR to the server. While it is the authority for these
-    values, it has no way to guarantee these values after the
-    delegation has been returned. And as such, it can not pass these
-    times up to an application expecting posix compliance.
-      </t>
-      <t>
+<section anchor="sec_proxy" numbered="true" removeInRFC="false" toc="default">
+  <name>Proxying of Times</name>
+  <t>
+    When a client is granted a write delegation on a file, it is the
+    authority for the file. If the server queries the client as to
+    the state of the file via a CB_GETATTR (see Section 20.1 of <xref
+    target="RFC8881" format="default" sectionFormat="of"/>), then it
+    can only determine the size of the file. Likewise, if the client
+    holding the delegation wants to know either of the access, modify,
+    or change times, it has to send a GETATTR to the server. While it
+    is the authority for these values, it has no way to guarantee these
+    values after the delegation has been returned. And as such, it can
+    not pass these times up to an application expecting posix compliance.
+  </t>
+  <t>
     With the addition of the new flag:
     OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS, the client and server can
-    negiotiate that the client will be the authority for these values
-    and upon return of the delegation stateid via a DELEGRETURN (see
-    section 18.6 of <xref target="RFC5661" format="default"/>), the times will be passed
-    back to the server. If the server is queried by another client for
-    either the size or the times, it will need to use a CB_GETATTR to
-    query the client which holds the delegation (see Section 20.1 of
-    <xref target="RFC5661" format="default"/>).
-      </t>
-      <t>
+    negiotiate that the client will be the authority for these values and
+    upon return of the delegation stateid via a DELEGRETURN (see section
+    18.6 of <xref target="RFC8881" format="default" sectionFormat="of"/>),
+    the times will be passed back to the server. If the server is queried
+    by another client for either the size or the times, it will need to
+    use a CB_GETATTR to query the client which holds the delegation
+    (see Section 20.1 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>).
+  </t>
+  <t>
     If a server informs the client via the FATTR4_OPEN_ARGUMENTS attribute
-    that it supports OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS and
-    it returns a valid delegation stateid for an OPEN operation which
-    sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag,
+    that it supports OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
+    and it returns a valid delegation stateid for an OPEN operation
+    which sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag,
     then it MUST be able to query the client via a CB_GETATTR for the
     FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
     attribute. (The change time can be derived from the modify
-    time.) Further, when it gets a SETATTR (see Section 18.30 of
-    <xref target="RFC5661" format="default"/>) in the same compound as the DELEGRETURN,
-    then it MUST accept those FATTR4_TIME_DELEG_ACCESS attribute and
-    FATTR4_TIME_DELEG_MODIFY attribute changes and derive the change
-    time or reject the changes with NFS4ERR_DELAY.
-      </t>
-      <t>
+    time.) Further, when it gets a SETATTR (see Section 18.34 of
+    <xref target="RFC8881" format="default" sectionFormat="of"/>) in
+    the same compound as the DELEGRETURN, then it MUST accept those
+    FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
+    attribute changes and derive the change time or reject the changes
+    with NFS4ERR_DELAY.
+  </t>
+  <t>
     A key prerequisite of this approach is that the server and client
     are in time synchronization with each other.  Note that while
     the base NFSv4.2 does not require such synchronization, the
@@ -430,48 +427,47 @@
     Note that if the clock skew is large, this policy will result
     in access to the file being denied until such time that the
     clock skew is exceeded.
-      </t>
-      <t>
-   A change in the access time MUST not advance the change time, also
-   known as the time_metadata attribute (see Section 5.8.2.42 of
-   <xref target="RFC5661" format="default"/>), but a
-   change in the modify time might advance the change time (and in turn
-   the change attribute (See Section 5.8.1.4 of <xref target="RFC5661" format="default"/>).
-   If the modify time is greater than the change time and before the
-   current time, then the change time is adjusted to the modify time
-   and not the current time (as is most likely done on most SETATTR
-   calls that change the metadata). If the modify time is in the
-   future, it will be clamped to the current time.
-      </t>
-      <t>
-   Note that each of the possible times, access, modify, and change, are
-   compared to the current time. They should all be compared against
-   the same time value for the current time. I.e., do not retrieve
-   a different value of the current time for each calculation.
-      </t>
-      <t>
-   If the client sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
-   flag in an OPEN operation, then it MUST support the FATTR4_TIME_DELEG_ACCESS
-   and FATTR4_TIME_DELEG_MODIFY attributes both in the CB_GETATTR
-   and SETATTR operations.
-      </t>
-      <section anchor="ssec_proxy_use" numbered="true" toc="default">
-        <name>Use case</name>
-        <t>
+  </t>
+  <t>
+    A change in the access time MUST NOT advance the change time,
+    also known as the time_metadata attribute (see Section 5.8.2.42 of
+    <xref target="RFC8881" format="default" sectionFormat="of"/>), but a
+    change in the modify time might advance the change time (and in turn
+    the change attribute (See Section 5.8.1.4 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>).  If the modify time is greater
+    than the change time and before the current time, then the change time
+    is adjusted to the modify time and not the current time (as is most
+    likely done on most SETATTR calls that change the metadata). If the
+    modify time is in the future, it will be clamped to the current time.
+  </t>
+  <t>
+    Note that each of the possible times, access, modify, and change, are
+    compared to the current time. They should all be compared against
+    the same time value for the current time. I.e., do not retrieve
+    a different value of the current time for each calculation.
+  </t>
+  <t>
+    If the client sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
+    flag in an OPEN operation, then it MUST support the FATTR4_TIME_DELEG_ACCESS
+    and FATTR4_TIME_DELEG_MODIFY attributes both in the CB_GETATTR
+    and SETATTR operations.
+  </t>
+
+  <section anchor="ssec_proxy_use" numbered="true" removeInRFC="false" toc="default">
+    <name>Use case</name>
+    <t>
       When a server is a proxy for a NFSv4 server, it is a client
       to the NFSv4 server and during file I/O, it may get a delegation
       on a file. The client of the proxy would be querying the
       proxy for attributes and not the NFSv4 server.  Each GETATTR
       from that client would result in at least one additional
       GETATTR being sent across the wire.
-        </t>
-      </section>
-      <section anchor="ssec_proxy_xdr" numbered="true" toc="default">
-        <name>XDR for Proxying of Times</name>
-        <t>
-    &lt;CODE BEGINS&gt;
-        </t>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+    </t>
+  </section>
+
+  <section anchor="ssec_proxy_xdr" numbered="true" removeInRFC="false" toc="default">
+    <name>XDR for Proxying of Times</name>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// /*
 ///  * attributes for the delegation times being
@@ -480,8 +476,9 @@
 /// typedef nfstime4        fattr4_time_deleg_access;
 /// typedef nfstime4        fattr4_time_deleg_modify;
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// %/*
 /// % * New RECOMMENDED Attribute for
@@ -490,127 +487,128 @@
 /// const FATTR4_TIME_DELEG_ACCESS  = 84;
 /// const FATTR4_TIME_DELEG_MODIFY  = 85;
 ///
- ]]></artwork>
-        <artwork name="" type="" align="left" alt=""><![CDATA[
+ ]]>
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000;
 ///
- ]]></artwork>
-        <t>
-    &lt;CODE ENDS&gt;
-        </t>
-      </section>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2019) -->
-<!-- Copyright (C) The Internet Society (2019) -->
+ ]]>
+    </sourcecode>
+  </section>
+</section>
 
-<section anchor="op_LAYOUT_WCC" numbered="true" toc="default">
-      <name>Operation 77: LAYOUT_WCC - Layout Weak Cache Consistency</name>
-      <section toc="exclude" anchor="ss_op_LAYOUT_WCC_A" numbered="true">
-        <name>ARGUMENT</name>
-        <sourcecode name="" type="" markers="true"><![CDATA[
+<section anchor="op_LAYOUT_WCC" numbered="true" removeInRFC="false" toc="default">
+  <name>Operation 77: LAYOUT_WCC - Layout Weak Cache Consistency</name>
+  <section toc="exclude" anchor="ss_op_LAYOUT_WCC_A" numbered="true">
+    <name>ARGUMENT</name>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 /// struct LAYOUT_WCC4args {
 ///         stateid4        lowa_stateid;
 ///         layouttype4     lowa_type;
 ///         opaque          lowa_body<>;
 /// };
 ]]></sourcecode>
-      </section>
-      <section toc="exclude" anchor="ss_op_LAYOUT_WCC_R" numbered="true">
-        <name>RESULT</name>
-        <sourcecode name="" type="" markers="true"><![CDATA[
+   </section>
+   <section toc="exclude" anchor="ss_op_LAYOUT_WCC_R" numbered="true">
+     <name>RESULT</name>
+     <sourcecode name="" type="" markers="true"><![CDATA[
 /// struct LAYOUT_WCC4res {
 ///         nfsstat4                lowr_status;
 /// };
 ]]></sourcecode>
-      </section>
-      <section toc="exclude" anchor="ss_op_LAYOUT_WCC_D" numbered="true">
-        <name>DESCRIPTION</name>
-        <t>
-      When using pNFS (See Section 12 of <xref target="RFC5661" format="default"/>),
-      the client is most likely to be performing file operations to the
-      storage device and not the metadata server. With some layout types
-      (most notably the flexible files layout type in <xref target="RFC8435" format="default"/>)
-      there is no control protocol between the metadata server and the
-      storage device. In order to update the metadata state of the file,
-      the metadata server will need to track the metadata state of the
-      data file - once the layout is issued, it is not able to see the
-      NFSv3 file operations from the client to the storage device. Thus
-      the metadata server will be required to query the storage device
-      for the data file attributes.
-        </t>
-        <t>
-      For example, with a flexible files layout type, the metadata server
-      would issue a NFSv3 GETATTR to the storage device. These queries are
-      most likely triggered in response to a NFSv4 GETATTR to the metadata
-      server. Not only are these GETATTRs to the storage device individually
-      expensive, the storage device can become inundated by a storm of such
-      requests. NFSv3 solved a similar issue by having the READ and WRITE
-      operations employ a post-operation attribute to report the weak cache
-      consistency (WCC) data (See Section 2.6 of <xref target="RFC1813" format="default"/>).
-        </t>
-        <t>
-      Each NFSv3 operation corresponds to one round trip between the client
-      and server. So a WRITE followed by a GETATTR would require two round
-      trips. In that scenario, the attribute information retrieved is
-      considered to be strict server-client consistency for a cache
-      consistency protocol. For NFSv4, the WRITE and GETATTR can be issued
-      together inside a compound, which only requires one round trip
-      between the client and server. And this is also considered to be
-      a strict server-client consistency. In essence, the NFSv4 READ and WRITE
-      operations drop the post-operation attributes, allowing the client
-      to decide if it needs that information.
-        </t>
-        <t>
-      With the flexible files layout type, the client can leverage the NFSv3
-      WCC to service the proxying of times (See <xref target="sec_proxy" format="default"/>).
-      But the granularity of this data is limited. With client
-      side mirroring (See Section 8 of <xref target="RFC8435" format="default"/>), the
-      client has to aggregate the N mirrored files in order to send one
-      piece of information instead of N pieces of information. Also, the
-      client is limited to sending that information only when it returns
-      the delegation.
-        </t>
-        <t>
-      The current filehandle and the lowa_stateid identifies the
-      particular layout for the LAYOUT_WCC operation. The lowa_type
-      indicates how to unpack the layout type specific payload inside
-      the lowa_body field. The lowa_type is defined to be a value from
-      the IANA registry for "pNFS Layout Types Registry".
-        </t>
-        <t>
-      The lowa_body will contain the data file attributes. The client
-      will be responsible for mapping the NFSv3 post-operation attributes
-      to those in a fattr4.  Just as the post-operation attributes may be
-      ignored by the client, the server may ignore the attributes inside
-      the LAYOUT_WCC.  But the server can also use those attributes to
-      avoid querying the storage device for the data file attributes.
-      Note that as these attributes are optional and there is nothing
-      the client can do if the server ignores one, there is no need
-      to return a bitmap4 of which attributes were accepted in the
-      result of the LAYOUT_WCC.
-        </t>
-      </section>
-      <section anchor="ss_op_LAYOUT_WCC_errs" numbered="true" toc="default">
-        <name>Allowed Errors</name>
-        <t>
+   </section>
+   <section toc="exclude" anchor="ss_op_LAYOUT_WCC_D" numbered="true">
+     <name>DESCRIPTION</name>
+     <t>
+       When using pNFS (See Section 12 of <xref target="RFC8881"
+       format="default" sectionFormat="of"/>), the client is most likely
+       to be performing file operations to the storage device and not the
+       metadata server. With some layout types (most notably the flexible
+       files layout type in <xref target="RFC8435" format="default"
+       sectionFormat="of"/>) there is no control protocol between the
+       metadata server and the storage device. In order to update the
+       metadata state of the file, the metadata server will need to track
+       the metadata state of the data file - once the layout is issued,
+       it is not able to see the NFSv3 file operations from the client
+       to the storage device. Thus the metadata server will be required
+       to query the storage device for the data file attributes.
+     </t>
+     <t>
+       For example, with a flexible files layout type, the metadata server
+       would issue a NFSv3 GETATTR to the storage device. These queries
+       are most likely triggered in response to a NFSv4 GETATTR to the
+       metadata server. Not only are these GETATTRs to the storage device
+       individually expensive, the storage device can become inundated by
+       a storm of such requests. NFSv3 solved a similar issue by having
+       the READ and WRITE operations employ a post-operation attribute
+       to report the weak cache consistency (WCC) data (See Section 2.6
+       of <xref target="RFC1813" format="default" sectionFormat="of"/>).
+     </t>
+     <t>
+       Each NFSv3 operation corresponds to one round trip between the
+       client and server. So a WRITE followed by a GETATTR would require
+       two round trips. In that scenario, the attribute information
+       retrieved is considered to be strict server-client consistency for
+       a cache consistency protocol. For NFSv4, the WRITE and GETATTR can
+       be issued together inside a compound, which only requires one round
+       trip between the client and server. And this is also considered
+       to be a strict server-client consistency. In essence, the NFSv4
+       READ and WRITE operations drop the post-operation attributes,
+       allowing the client to decide if it needs that information.
+     </t>
+     <t>
+       With the flexible files layout type, the client can leverage
+       the NFSv3 WCC to service the proxying of times (See <xref
+       target="sec_proxy" format="default" sectionFormat="of"/>).
+       But the granularity of this data is limited. With client side
+       mirroring (See Section 8 of <xref target="RFC8435" format="default"
+       sectionFormat="of"/>), the client has to aggregate the N mirrored
+       files in order to send one piece of information instead of N
+       pieces of information. Also, the client is limited to sending
+       that information only when it returns the delegation.
+     </t>
+     <t>
+       The current filehandle and the lowa_stateid identifies the
+       particular layout for the LAYOUT_WCC operation. The lowa_type
+       indicates how to unpack the layout type specific payload inside
+       the lowa_body field. The lowa_type is defined to be a value from
+       the IANA registry for "pNFS Layout Types Registry".
+     </t>
+     <t>
+       The lowa_body will contain the data file attributes. The client
+       will be responsible for mapping the NFSv3 post-operation attributes
+       to those in a fattr4.  Just as the post-operation attributes may be
+       ignored by the client, the server may ignore the attributes inside
+       the LAYOUT_WCC.  But the server can also use those attributes to
+       avoid querying the storage device for the data file attributes.
+       Note that as these attributes are optional and there is nothing
+       the client can do if the server ignores one, there is no need to
+       return a bitmap4 of which attributes were accepted in the result
+       of the LAYOUT_WCC.
+     </t>
+   </section>
+
+   <section anchor="ss_op_LAYOUT_WCC_errs" numbered="true" removeInRFC="false" toc="default">
+     <name>Allowed Errors</name>
+     <t>
       The LAYOUT_WCC operation can raise the errors in
-      <xref target="tbl_op_error_returns" format="default"/>. When an error
+      <xref target="tbl_op_error_returns" format="default" sectionFormat="of"/>. When an error
       is encountered, the metadata server can decide to ignore
       the entire operation or depending on the layout type
       specific payload, it could decide to apply a portion
       of the payload.
-        </t>
-        <t keepWithNext="true">Valid Error Returns for LAYOUT_WCC</t>
-        <table anchor="tbl_op_error_returns" align="center">
-          <thead>
-            <tr>
-              <th align="left">Errors</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td align="left">
+     </t>
+     <t keepWithNext="true">Valid Error Returns for LAYOUT_WCC</t>
+     <table anchor="tbl_op_error_returns" align="center">
+       <thead>
+         <tr>
+           <th align="left">Errors</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <td align="left">
         NFS4ERR_ADMIN_REVOKED,
         NFS4ERR_BADXDR,
         NFS4ERR_BAD_STATEID,
@@ -638,14 +636,14 @@
         NFS4ERR_UNKNOWN_LAYOUTTYPE,
         NFS4ERR_WRONG_CRED,
         NFS4ERR_WRONG_TYPE
-      </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-      <section anchor="ss_op_LAYOUT_WCC_ff" numbered="true" toc="default">
-        <name>Flex Files Layout Type</name>
-        <sourcecode name="" type="" markers="true"><![CDATA[
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section anchor="ss_op_LAYOUT_WCC_ff" numbered="true" removeInRFC="false" toc="default">
+    <name>Flex Files Layout Type</name>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 /// struct ff_data_server_wcc4 {
 ///             deviceid4            ffdsw_deviceid;
 ///             stateid4             ffdsw_stateid;
@@ -660,25 +658,31 @@
 /// struct ff_layout_wcc4 {
 ///             ff_mirror_wcc4       fflw_mirrors<>;
 /// };
-]]></sourcecode>
-        <t>
-      The flex file layout type specific results SHOULD correspond to the
-      ff_layout4 data structure as defined in Section 5.1 of <xref target="RFC8435" format="default"/>.
+]]>
+    </sourcecode>
+    <t>
+      The flex file layout type specific results SHOULD correspond
+      to the ff_layout4 data structure as defined in Section 5.1 of
+      <xref target="RFC8435" format="default" sectionFormat="of"/>.
       There SHOULD be a one-to-one correspondence between:
-
-        </t>
-        <ul spacing="normal">
-          <li> ff_data_server4 -&gt; ff_data_server_wcc4 </li>
-          <li> ff_mirror4 -&gt; ff_mirror_wcc4</li>
-          <li> ff_layout4 -&gt; ff_layout_wcc4</li>
-        </ul>
-        <t>
-
+    </t>
+    <ul spacing="normal">
+      <li>
+        ff_data_server4 -&gt; ff_data_server_wcc4 
+      </li>
+      <li>
+        ff_mirror4 -&gt; ff_mirror_wcc4
+      </li>
+      <li>
+        ff_layout4 -&gt; ff_layout_wcc4
+      </li>
+    </ul>
+    <t>
       Each ff_layout4 has an array of ff_mirror4, which have an array of ff_data_server4.
       Based on the current filehandle and the lowa_stateid, the server can match the
       reported attributes.
-        </t>
-        <t>
+    </t>
+    <t>
       But the positional correspondence between the elements is not
       sufficient to determine the attributes to update. Consider the
       case where a layout had three mirrors and two of them had updated
@@ -686,250 +690,141 @@
       all three mirrors, with one mirror having an attribute mask with
       no attributes present. Or it could decide to present only the
       two mirrors which had been changed.
-        </t>
-        <t>
+    </t>
+    <t>
       In either case, the combination of ffdsw_deviceid, ffdsw_stateid, and
       ffdsw_fh_vers will uniquely identify the attributes to be updated.
       All three arguments are required. A layout might have multiple data
       files on the same storage device, in which case the ffdsw_deviceid and
       ffdsw_stateid would match, but the ffdsw_fh_vers would not.
-        </t>
-        <t>
+    </t>
+    <t>
       The ffdsw_attributes are processed similar to the obj_attributes in
-      the SETATTR arguments (See Section 18.30 of <xref target="RFC5661" format="default"/>).
-        </t>
-      </section>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2014) -->
-<!-- Copyright (C) The Internet Society (2014) -->
+      the SETATTR arguments (See Section 18.34 of <xref target="RFC8881" format="default" sectionFormat="of"/>).
+    </t>
+  </section>
+</section>
 
-<section anchor="xdr_desc" numbered="true" toc="default">
-      <name>Extraction of XDR</name>
-      <t>
+<section anchor="xdr_desc" numbered="true" removeInRFC="false" toc="default">
+  <name>Extraction of XDR</name>
+  <t>
     This document contains the external data representation (XDR)
-    <xref target="RFC4506" format="default"/> description of the new open
+    <xref target="RFC4506" format="default" sectionFormat="of"/> description of the new open
     flags for delegating the file to the client.
     The XDR description is embedded in this
     document in a way that makes it simple for the reader to extract
     into a ready-to-compile form.  The reader can feed this document
     into the following shell script to produce the machine readable
     XDR description of the new flags:
-      </t>
-      <t>
-    &lt;CODE BEGINS&gt;
-      </t>
-      <artwork name="" type="" align="left" alt=""><![CDATA[
+  </t>
+  <sourcecode name="" type="" markers="true"><![CDATA[
 #!/bin/sh
 grep '^ *///' $* | sed 's?^ */// ??' | sed 's?^ *///$??'
-    ]]></artwork>
-      <t>
-    &lt;CODE ENDS&gt;
-      </t>
-      <t>
+    ]]>
+  </sourcecode>
+  <t>
     That is, if the above script is stored in a file called "extract.sh", and
     this document is in a file called "spec.txt", then the reader can do:
-      </t>
-      <artwork name="" type="" align="left" alt=""><![CDATA[
+  </t>
+  <sourcecode name="" type="" markers="true"><![CDATA[
 sh extract.sh < spec.txt > delstid_prot.x
-    ]]></artwork>
-      <t>
+    ]]>
+  </sourcecode>
+  <t>
     The effect of the script is to remove leading white space from each
     line, plus a sentinel sequence of "///".  XDR descriptions with the
     sentinel sequence are embedded throughout the document.
-      </t>
-      <t>
+  </t>
+  <t>
     Note that the XDR code contained in this document depends on types
-    from the NFSv4.2 nfs4_prot.x file (generated from <xref target="RFC7863" format="default"/>).
+    from the NFSv4.2 nfs4_prot.x file (generated from <xref target="RFC7863" format="default" sectionFormat="of"/>).
     This includes both nfs types that end with a 4, such as offset4,
     length4, etc., as well as more generic types such as uint32_t and
     uint64_t.
-      </t>
-      <t>
-    While the XDR can be appeneded to that from <xref target="RFC7863" format="default"/>,
+  </t>
+  <t>
+    While the XDR can be appeneded to that from <xref target="RFC7863" format="default" sectionFormat="of"/>,
     the various code snippets belong in their respective areas of the
     that XDR.
-      </t>
-      <section anchor="code_copyright" numbered="true" toc="default">
-        <name>Code Components Licensing Notice</name>
-        <t>
-      Both the XDR description and the scripts used for extracting
-      the XDR description
-      are Code Components as described in Section 4 of
-      <xref target="LEGAL" format="default">"Legal Provisions Relating to IETF Documents"</xref>.
-      These Code Components are licensed according to the terms of that
-      document.
-        </t>
-      </section>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+  </t>
+  <section anchor="code_copyright" numbered="true" removeInRFC="false" toc="default">
+    <name>Code Components Licensing Notice</name>
+    <t>
+       Both the XDR description and the scripts used for extracting the
+       XDR description are Code Components as described in Section 4 of
+       <xref target="LEGAL" format="default" sectionFormat="of">"Legal
+       Provisions Relating to IETF Documents"</xref>.  These Code
+       Components are licensed according to the terms of that document.
+    </t>
+  </section>
+</section>
 
-<section anchor="sec_security" numbered="true" toc="default">
-      <name>Security Considerations</name>
-      <t>
+<section anchor="sec_security" numbered="true" removeInRFC="false" toc="default">
+  <name>Security Considerations</name>
+  <t>
     There are no new security considerations beyond those in
-    <xref target="RFC7862" format="default"/>.
-      </t>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+    <xref target="RFC7862" format="default" sectionFormat="of"/>.
+  </t>
+</section>
 
-<section anchor="sec_iana" numbered="true" toc="default">
-      <name>IANA Considerations</name>
-      <t>
-    There are no IANA considerations.
-      </t>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+<section anchor="sec_iana" numbered="true" removeInRFC="false" toc="default">
+  <name>IANA Considerations</name>
+  <t>
+    IANA should use the current document (RFC-TBD) as the reference for the new entries.
+  </t>
+</section>
 
 </middle>
-  <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
 
 <back>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
 
 <references>
-      <name>Normative References</name>
-      <reference anchor="RFC1813">
-        <front>
-          <title>NFS Version 3 Protocol Specification</title>
-          <author>
-            <organization>IETF</organization>
-          </author>
-          <date month="June" year="1995"/>
-        </front>
-        <seriesInfo name="RFC" value="1813"/>
-      </reference>
-      <reference anchor="RFC2119">
-        <front>
-          <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
-          <author initials="S." surname="Bradner" fullname="Scott Bradner">
-            <organization>Harvard University</organization>
-            <address>
-              <postal>
-                <street>1350 Mass. Ave.</street>
-                <street>Cambridge</street>
-                <street>MA 02138</street>
-              </postal>
-              <phone>- +1 617 495 3864</phone>
-              <email>sob@harvard.edu</email>
-            </address>
-          </author>
-          <date year="1997" month="March"/>
-        </front>
-        <seriesInfo name="BCP" value="14"/>
-        <seriesInfo name="RFC" value="2119"/>
-      </reference>
-      <reference anchor="LEGAL" target="http://trustee.ietf.org/docs/IETF-Trust-License-Policy.pdf">
-        <front>
-          <title abbrev="Legal Provisions">Legal Provisions Relating to IETF Documents</title>
-          <author>
-            <organization>IETF Trust</organization>
-          </author>
-          <date month="November" year="2008"/>
-        </front>
-      </reference>
-      <reference anchor="RFC4506">
-        <front>
-          <title abbrev="XDR">XDR: External Data Representation Standard</title>
-          <author initials="M." surname="Eisler" fullname="Mike Eisler">
-            <organization>Network Appliance, Inc.</organization>
-          </author>
-          <date month="May" year="2006"/>
-        </front>
-        <seriesInfo name="STD" value="67"/>
-        <seriesInfo name="RFC" value="4506"/>
-      </reference>
-      <reference anchor="RFC5661">
-        <front>
-          <title>Network File System (NFS) Version 4 Minor Version 1 Protocol</title>
-          <author initials="S." surname="Shepler" fullname="Spencer Shepler" role="editor">
-            <organization abbrev="Sun">Sun Microsystems, Inc.</organization>
-          </author>
-          <author initials="M." surname="Eisler" fullname="Mike Eisler" role="editor">
-            <organization abbrev="Netapp">Network Appliance, Inc.</organization>
-          </author>
-          <author initials="D." surname="Noveck" fullname="David Noveck" role="editor">
-            <organization abbrev="Netapp">Network Appliance, Inc.</organization>
-          </author>
-          <date month="January" year="2010"/>
-        </front>
-        <seriesInfo name="RFC" value="5661"/>
-      </reference>
-      <reference anchor="RFC7862" target="ftp://ftp.isi.edu/in-notes/rfc7862.txt">
-        <front>
-          <title>NFS Version 4 Minor Version 2</title>
-          <author initials="T" surname="Haynes" fullname="Thomas Haynes">
-            <organization abbrev="Primary Data"/>
-          </author>
-          <date month="November" year="2016"/>
-        </front>
-        <seriesInfo name="RFC" value="7862"/>
-      </reference>
-      <reference anchor="RFC7863">
-        <front>
-          <title>Network File System (NFS) Version 4 Minor Version 2
-        External Data Representation Standard (XDR) Description</title>
-          <author initials="T." surname="Haynes" fullname="T. Haynes">
-            <organization>Primary Data</organization>
-          </author>
-          <date year="2016" month="November"/>
-        </front>
-        <seriesInfo name="RFC" value="7863"/>
-      </reference>
-      <reference anchor="RFC8178">
-        <front>
-          <title>Rules for NFSv4 Extensions and Minor Versions</title>
-          <author initials="D." surname="Noveck" fullname="D. Noveck">
-            <organization>NetApp</organization>
-          </author>
-          <date year="2017" month="July"/>
-        </front>
-        <seriesInfo name="RFC" value="8178"/>
-      </reference>
-      <reference anchor="RFC8435">
-        <front>
-          <title>Parallel NFS (pNFS) Flexible File Layout</title>
-          <author initials="B." surname="Halevy" fullname="B. Halevy">
-        </author>
-          <author initials="T." surname="Haynes" fullname="T. Haynes">
-            <organization>Primary Data</organization>
-          </author>
-          <date year="2018" month="August"/>
-        </front>
-        <seriesInfo name="RFC" value="8435"/>
-      </reference>
-    </references>
-    <!-- Copyright (C) The IETF Trust (2017) -->
-<!-- Copyright (C) The Internet Society (2018) -->
+  <name>References</name>
 
-<section numbered="true" toc="default">
+  <references>
+  <name>Normative References</name>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7863.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8178.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8435.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml"/>
+  </references>
+
+  <references>
+  <name>Informative References</name>
+    <reference anchor="LEGAL" target="http://trustee.ietf.org/docs/IETF-Trust-License-Policy.pdf">
+      <front>
+        <title abbrev="Legal Provisions">Legal Provisions Relating to IETF Documents</title>
+        <author>
+          <organization>IETF Trust</organization>
+        </author>
+        <date month="November" year="2008"/>
+      </front>
+    </reference>
+  </references>
+</references>
+
+<section numbered="true" removeInRFC="false" toc="default">
       <name>Acknowledgments</name>
       <t>
     Trond Myklebust and David Flynn
     all worked on the prototype at Hammerspace.
       </t>
     </section>
-    <section numbered="true" toc="default">
-      <name>RFC Editor Notes</name>
-      <t>
-[RFC Editor: please remove this section prior to publishing
-this document as an RFC]
-
-</t>
-      <t>
-[RFC Editor: prior to publishing this document as an RFC, please replace all occurrences of RFCTBD10
-with RFCxxxx where xxxx is the RFC number of this document]
-</t>
-    </section>
-    <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
 
 </back>
-  <!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
 
 </rfc>
