@@ -4,7 +4,7 @@
 
 <rfc
  category="std"
- docName="draft-ietf-nfsv4-delstid-latest"
+ docName="draft-ietf-nfsv4-delstid-VERSIONVAR"
  ipr="trust200902"
  obsoletes=""
  scripts="Common,Latin"
@@ -21,7 +21,7 @@
   <title abbrev="Deleg Stateid">
     Extending the Opening of Files in NFSv4.2
   </title>
-  <seriesInfo name="Internet-Draft" value="draft-ietf-nfsv4-delstid-latest"/>
+  <seriesInfo name="Internet-Draft" value="draft-ietf-nfsv4-delstid-VERSIONVAR"/>
   <author fullname="Thomas Haynes" initials="T." surname="Haynes">
     <organization abbrev="Hammerspace">Hammerspace</organization>
     <address>

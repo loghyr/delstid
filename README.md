@@ -9,6 +9,8 @@ NOTE: The drafts contained here may change after it is
 posted to the IETF site. The ITEF site is always the
 definitive authority on content.
 
+Old notes to build:
+
 To compile the XML files into text files:
 
 1. Install xml2rfc 
@@ -28,3 +30,10 @@ pip install xml2rfc
 
    > make
 
+New notes to build:
+
+1. Bump the VERS in Makefile
+
+2. Build
+
+   > make
