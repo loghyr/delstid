@@ -1,9 +1,0 @@
-<!-- Copyright (C) The IETF Trust (2018) -->
-<!-- Copyright (C) The Internet Society (2018) -->
-
-<section anchor="sec:security" title="Security Considerations">
-  <t>
-    There are no new security considerations beyond those in
-    <xref target='RFC7862' />.
-  </t>
-</section>
