@@ -200,9 +200,9 @@
     format="default" sectionFormat="of"/>) procedure returns an
     open stateid to the client to reference the state of the file.
     The client could also request a delegation stateid in the OPEN
-    arguements.  The file is said to be "open" to the client as long
+    arguments.  The file is said to be "open" to the client as long
     as the count of open and delegated stateids is greater than 0.
-    Either type of stateid is suffucient to keep the file open,
+    Either type of stateid is sufficient to keep the file open,
     which allows READ (See Section 18.25 of <xref target="RFC8881"
     format="default" sectionFormat="of"/>), WRITE (See Section 18.38
     of <xref target="RFC8881" format="default" sectionFormat="of"/>),
@@ -239,7 +239,7 @@
       NFSv4.x protocol without increasing the microversion.  The client
       can probe the capabilities of the server and based on that result,
       determine if both it and the server support features not specified
-      in the main microversion docuument.
+      in the main microversion document.
     </t>
     <t>
       The XDR extensions presented in this section allow for the OPEN
@@ -374,15 +374,17 @@
     target="RFC8881" format="default" sectionFormat="of"/>), then it
     can only determine the size of the file. Likewise, if the client
     holding the delegation wants to know either of the access, modify,
-    or change times, it has to send a GETATTR to the server. While it
-    is the authority for these values, it has no way to guarantee these
-    values after the delegation has been returned. And as such, it can
-    not pass these times up to an application expecting posix compliance.
+    or change times, it has to send a GETATTR to the server.  While it
+    is the authority for these values, it has no way to transfer these
+    values to the server when the delegation is being returned and the
+    server reclaims its authority with regard to these values.  And as
+    such, it can not pass these times up to an application expecting
+    posix compliance.
   </t>
   <t>
     With the addition of the new flag:
     OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS, the client and server can
-    negiotiate that the client will be the authority for these values and
+    negotiate that the client will be the authority for these values and
     upon return of the delegation stateid via a DELEGRETURN (see section
     18.6 of <xref target="RFC8881" format="default" sectionFormat="of"/>),
     the times will be passed back to the server. If the server is queried
@@ -737,7 +739,7 @@ sh extract.sh < spec.txt > delstid_prot.x
     uint64_t.
   </t>
   <t>
-    While the XDR can be appeneded to that from <xref target="RFC7863" format="default" sectionFormat="of"/>,
+    While the XDR can be appended to that from <xref target="RFC7863" format="default" sectionFormat="of"/>,
     the various code snippets belong in their respective areas of the
     that XDR.
   </t>
