@@ -134,9 +134,9 @@
         format="default" sectionFormat="of"/>)
       </dd>
     </dl>
-      </section> <section numbered="true" removeInRFC="false"
-      toc="default">
-        <name>Requirements Language</name>
+  </section>
+  <section numbered="true" removeInRFC="false" toc="default">
+    <name>Requirements Language</name>
     <t>
       The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>",
       "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>", "<bcp14>SHALL
