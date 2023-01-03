@@ -424,7 +424,7 @@
     clock skew is exceeded.
   </t>
   <t>
-    A change in the access time MUST NOT advance the change time,
+    A change in the access time <bcp14>MUST NOT</bcp14> advance the change time,
     also known as the time_metadata attribute (see Section 5.8.2.42 of
     <xref target="RFC8881" format="default" sectionFormat="of"/>), but a
     change in the modify time might advance the change time (and in turn
@@ -443,7 +443,7 @@
   </t>
   <t>
     If the client sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
-    flag in an OPEN operation, then it MUST support the FATTR4_TIME_DELEG_ACCESS
+    flag in an OPEN operation, then it <bcp14>MUST</bcp14> support the FATTR4_TIME_DELEG_ACCESS
     and FATTR4_TIME_DELEG_MODIFY attributes both in the CB_GETATTR
     and SETATTR operations.
   </t>
@@ -656,10 +656,10 @@
 ]]>
     </sourcecode>
     <t>
-      The flex file layout type specific results SHOULD correspond
+      The flex file layout type specific results <bcp14>SHOULD</bcp14> correspond
       to the ff_layout4 data structure as defined in Section 5.1 of
       <xref target="RFC8435" format="default" sectionFormat="of"/>.
-      There SHOULD be a one-to-one correspondence between:
+      There <bcp14>SHOULD</bcp14> be a one-to-one correspondence between:
     </t>
     <ul spacing="normal">
       <li>
