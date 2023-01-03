@@ -124,13 +124,8 @@
       </dd>
       <dt>weak cache consistency (WCC):</dt>
       <dd>
-        In NFSv4, operations are not sent in a compound, hence the client
-        would have to perform two round trips to the server in order
-        to determine the result of modification to the state of a file
-        or directory.  With WCC, the server can return post-operation
-        attributes on such operations. As these do not provide a strict
-        consistency between the server and client, the client is free
-        to ignore the data.  (See Section 2.6 of <xref target="RFC1813"
+        In NFSv3, WCC allows the client to check for file attribute changes
+        before and after an operation.  (See Section 2.6 of <xref target="RFC1813"
         format="default" sectionFormat="of"/>)
       </dd>
     </dl>
