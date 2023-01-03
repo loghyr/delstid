@@ -40,7 +40,7 @@
   <keyword>NFSv4</keyword>
   <abstract>
     <t>
-      The Network File System v6 (NFSv4) allows a client to both open
+      The Network File System v4 (NFSv4) allows a client to both open
       a file and be granted a delegation of that file.  This provides
       the client the right to cache metadata on the file locally.
       This document presents several refinements to
