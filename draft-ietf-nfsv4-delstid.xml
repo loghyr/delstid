@@ -637,6 +637,15 @@
       </tbody>
     </table>
   </section>
+  <section anchor="ss_op_LAYOUT_WCC_opt" numbered="true" removeInRFC="false" toc="default">
+    <name>Extension of Existing Implementations</name>
+    <t>
+      The new LAYOUT_WCC operation is <bcp14>OPTIONAL</bcp14> for both
+      NFSv4.2 (<xref target="RFC7863" format="default" sectionFormat="of"/>)
+      and the flexible files layout type (<xref target="RFC8435" format="default"
+       sectionFormat="of"/>).
+    </t>
+  </section>
   <section anchor="ss_op_LAYOUT_WCC_ff" numbered="true" removeInRFC="false" toc="default">
     <name>Flex Files Layout Type</name>
     <sourcecode name="" type="" markers="true"><![CDATA[
