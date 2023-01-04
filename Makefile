@@ -13,4 +13,4 @@ DOC_PREFIX=delstid
 all: $(BASEDOC)-$(VERS).xml
 
 $(BASEDOC)-$(VERS).xml: $(BASEDOC).xml
-	sed -e s/VERSIONVAR/${VERS}/g < $(BASEDOC).xml > $@
+	sed -e s/VERSIONVAR/${VERS}/g -e s/DAYVAR/${DAY}/g -e s/MONTHVAR/${MONTH}/g -e s/YEARVAR/${YEAR}/g < $(BASEDOC).xml > $@

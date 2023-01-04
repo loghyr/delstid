@@ -34,7 +34,7 @@
       <email>trondmy@hammerspace.com</email>
     </address>
   </author>
-  <date year="2022" month="December" day="10"/>
+  <date year="YEARVAR" month="MONTHVAR" day="DAYVAR"/>
   <area>Transport</area>
   <workgroup>Network File System Version 4</workgroup>
   <keyword>NFSv4</keyword>
