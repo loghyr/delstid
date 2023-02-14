@@ -266,12 +266,12 @@
     that it supports OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
     and it returns a valid delegation stateid for an OPEN operation
     which sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag,
-    then it MUST be able to query the client via a CB_GETATTR for the
+    then it <bcp14>MUST</bcp14> be able to query the client via a CB_GETATTR for the
     FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
     attribute. (The change time can be derived from the modify
     time.) Further, when it gets a SETATTR (see Section 18.34 of
     <xref target="RFC8881" format="default" sectionFormat="of"/>) in
-    the same compound as the DELEGRETURN, then it MUST accept those
+    the same compound as the DELEGRETURN, then it <bcp14>MUST</bcp14> accept those
     FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
     attribute changes and derive the change time or reject the changes
     with NFS4ERR_DELAY.
@@ -282,7 +282,7 @@
     the base NFSv4.2 does not require such synchronization, the
     use of RPCSEC_GSS typically makes such a requirement. When the
     client presents either FATTR4_TIME_DELEG_ACCESS or FATTR4_TIME_DELEG_MODIFY
-    attributes to the server, the server MUST decide whether the
+    attributes to the server, the server <bcp14>MUST</bcp14> decide whether the
     times presented are before the old times or past the current time.
     If the time presented is before the original time, then the
     update is ignored. If the time presented is in the future, the
