@@ -116,8 +116,13 @@
         holder that inconsistent opens and file changes cannot occur so
         long as the delegation is held.
       </dd>
+      <dt>proxy:</dt>
+      <dd>
+        A proxy of attributes occurs when the client has the authority
+        to represent the server's attributes.
+      </dd>
       <dt>stateid:</dt>
-      <dd> 
+      <dd>
         A stateid is a 128-bit quantity returned by a server that uniquely
         defines state held by the server for the client. (See Section
         8 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
@@ -266,7 +271,7 @@
     that it supports OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
     and it returns a valid delegation stateid for an OPEN operation
     which sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag,
-    then it <bcp14>MUST</bcp14> be able to query the client via a CB_GETATTR for the
+    then it <bcp14>MUST</bcp14> query the client via a CB_GETATTR for the
     FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
     attribute. (The change time can be derived from the modify
     time.) Further, when it gets a SETATTR (see Section 18.34 of
@@ -312,7 +317,8 @@
   </t>
   <t>
     If the client sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
-    flag in an OPEN operation, then it <bcp14>MUST</bcp14> support the FATTR4_TIME_DELEG_ACCESS
+    flag in an OPEN operation, then it <bcp14>MUST</bcp14> support
+    the FATTR4_TIME_DELEG_ACCESS
     and FATTR4_TIME_DELEG_MODIFY attributes both in the CB_GETATTR
     and SETATTR operations.
   </t>
@@ -435,7 +441,7 @@
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              = 5,
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
 ///                                                    = 17,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED 
+///    OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED
 ///                                                    = 18,
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    = 20,
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21
@@ -658,11 +664,11 @@
 ///             nfs_fh4              ffdsw_fh_vers<>;
 ///             fattr4               ffdsw_attributes;
 /// };
-/// 
+///
 /// struct ff_mirror_wcc4 {
 ///             ff_data_server_wcc4  ffmw_data_servers<>;
 /// };
-/// 
+///
 /// struct ff_layout_wcc4 {
 ///             ff_mirror_wcc4       fflw_mirrors<>;
 /// };
@@ -676,7 +682,7 @@
     </t>
     <ul spacing="normal">
       <li>
-        ff_data_server4 -&gt; ff_data_server_wcc4 
+        ff_data_server4 -&gt; ff_data_server_wcc4
       </li>
       <li>
         ff_mirror4 -&gt; ff_mirror_wcc4
