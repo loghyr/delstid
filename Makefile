@@ -9,7 +9,7 @@ WCC_VERS=00
 
 DS_BASEDOC=draft-ietf-nfsv4-delstid
 
-WCCBASEDOC=draft-haynes-nfsv4-layoutwcc
+WCC_BASEDOC=draft-haynes-nfsv4-layoutwcc
 
 all: $(DS_BASEDOC)-$(DS_VERS).xml $(WCC_BASEDOC)-$(WCC_VERS).xml
 

@@ -89,12 +89,6 @@
       number of times the client needs to go to the server
       to get that information.
     </li>
-    <li>
-      for clients using Parallel NFS (pNFS) (see Section 12 of
-      <xref target="RFC8881" format="default" sectionFormat="of"/>),
-      periodically report the attributes of the data files to the
-      metadata server.
-    </li>
   </ul>
 
   <t>
@@ -126,12 +120,6 @@
         A stateid is a 128-bit quantity returned by a server that uniquely
         defines state held by the server for the client. (See Section
         8 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
-      </dd>
-      <dt>weak cache consistency (WCC):</dt>
-      <dd>
-        In NFSv3, WCC allows the client to check for file attribute changes
-        before and after an operation.  (See Section 2.6 of <xref target="RFC1813"
-        format="default" sectionFormat="of"/>)
       </dd>
     </dl>
   </section>
@@ -503,222 +491,6 @@
   </sourcecode>
 </section>
 
-<section anchor="op_LAYOUT_WCC" numbered="true" removeInRFC="false" toc="default">
-  <name>Operation 77: LAYOUT_WCC - Layout Weak Cache Consistency</name>
-  <section toc="exclude" anchor="ss_op_LAYOUT_WCC_A" numbered="true">
-    <name>ARGUMENT</name>
-    <sourcecode name="" type="" markers="true"><![CDATA[
-/// struct LAYOUT_WCC4args {
-///         stateid4        lowa_stateid;
-///         layouttype4     lowa_type;
-///         opaque          lowa_body<>;
-/// };
-]]></sourcecode>
-   </section>
-   <section toc="exclude" anchor="ss_op_LAYOUT_WCC_R" numbered="true">
-     <name>RESULT</name>
-     <sourcecode name="" type="" markers="true"><![CDATA[
-/// struct LAYOUT_WCC4res {
-///         nfsstat4                lowr_status;
-/// };
-]]></sourcecode>
-   </section>
-   <section toc="exclude" anchor="ss_op_LAYOUT_WCC_D" numbered="true">
-     <name>DESCRIPTION</name>
-     <t>
-       When using pNFS (See Section 12 of <xref target="RFC8881"
-       format="default" sectionFormat="of"/>), the client is most likely
-       to be performing file operations to the storage device and not the
-       metadata server. With some layout types (most notably the flexible
-       files layout type in <xref target="RFC8435" format="default"
-       sectionFormat="of"/>) there is no control protocol between the
-       metadata server and the storage device. In order to update the
-       metadata state of the file, the metadata server will need to track
-       the metadata state of the data file - once the layout is issued,
-       it is not able to see the NFSv3 file operations from the client
-       to the storage device. Thus the metadata server will be required
-       to query the storage device for the data file attributes.
-     </t>
-     <t>
-       For example, with a flexible files layout type, the metadata server
-       would issue a NFSv3 GETATTR to the storage device. These queries
-       are most likely triggered in response to a NFSv4 GETATTR to the
-       metadata server. Not only are these GETATTRs to the storage device
-       individually expensive, the storage device can become inundated by
-       a storm of such requests. NFSv3 solved a similar issue by having
-       the READ and WRITE operations employ a post-operation attribute
-       to report the weak cache consistency (WCC) data (See Section 2.6
-       of <xref target="RFC1813" format="default" sectionFormat="of"/>).
-     </t>
-     <t>
-       Each NFSv3 operation corresponds to one round trip between the
-       client and server. So a WRITE followed by a GETATTR would require
-       two round trips. In that scenario, the attribute information
-       retrieved is considered to be strict server-client consistency for
-       a cache consistency protocol. For NFSv4, the WRITE and GETATTR can
-       be issued together inside a compound, which only requires one round
-       trip between the client and server. And this is also considered
-       to be a strict server-client consistency. In essence, the NFSv4
-       READ and WRITE operations drop the post-operation attributes,
-       allowing the client to decide if it needs that information.
-     </t>
-     <t>
-       With the flexible files layout type, the client can leverage
-       the NFSv3 WCC to service the proxying of times (See <xref
-       target="sec_proxy" format="default" sectionFormat="of"/>).
-       But the granularity of this data is limited. With client side
-       mirroring (See Section 8 of <xref target="RFC8435" format="default"
-       sectionFormat="of"/>), the client has to aggregate the N mirrored
-       files in order to send one piece of information instead of N
-       pieces of information. Also, the client is limited to sending
-       that information only when it returns the delegation.
-     </t>
-     <t>
-       The current filehandle and the lowa_stateid identifies the
-       particular layout for the LAYOUT_WCC operation. The lowa_type
-       indicates how to unpack the layout type specific payload inside
-       the lowa_body field. The lowa_type is defined to be a value from
-       the IANA registry for "pNFS Layout Types Registry".
-     </t>
-     <t>
-       The lowa_body will contain the data file attributes. The client
-       will be responsible for mapping the NFSv3 post-operation attributes
-       to those in a fattr4.  Just as the post-operation attributes may be
-       ignored by the client, the server may ignore the attributes inside
-       the LAYOUT_WCC.  But the server can also use those attributes to
-       avoid querying the storage device for the data file attributes.
-       Note that as these attributes are optional and there is nothing
-       the client can do if the server ignores one, there is no need to
-       return a bitmap4 of which attributes were accepted in the result
-       of the LAYOUT_WCC.
-     </t>
-   </section>
-
-   <section anchor="ss_op_LAYOUT_WCC_errs" numbered="true" removeInRFC="false" toc="default">
-     <name>Allowed Errors</name>
-     <t>
-      The LAYOUT_WCC operation can raise the errors in
-      <xref target="tbl_op_error_returns" format="default" sectionFormat="of"/>. When an error
-      is encountered, the metadata server can decide to ignore
-      the entire operation or depending on the layout type
-      specific payload, it could decide to apply a portion
-      of the payload.
-     </t>
-     <t keepWithNext="true">Valid Error Returns for LAYOUT_WCC</t>
-     <table anchor="tbl_op_error_returns" align="center">
-       <thead>
-         <tr>
-           <th align="left">Errors</th>
-         </tr>
-       </thead>
-       <tbody>
-         <tr>
-           <td align="left">
-        NFS4ERR_ADMIN_REVOKED,
-        NFS4ERR_BADXDR,
-        NFS4ERR_BAD_STATEID,
-        NFS4ERR_DEADSESSION,
-        NFS4ERR_DELAY,
-        NFS4ERR_DELEG_REVOKED,
-        NFS4ERR_EXPIRED,
-        NFS4ERR_FHEXPIRED,
-        NFS4ERR_GRACE,
-        NFS4ERR_INVAL,
-        NFS4ERR_ISDIR,
-        NFS4ERR_MOVED,
-        NFS4ERR_NOFILEHANDLE,
-        NFS4ERR_NOTSUPP,
-        NFS4ERR_NO_GRACE,
-        NFS4ERR_OLD_STATEID,
-        NFS4ERR_OP_NOT_IN_SESSION,
-        NFS4ERR_REP_TOO_BIG,
-        NFS4ERR_REP_TOO_BIG_TO_CACHE,
-        NFS4ERR_REQ_TOO_BIG,
-        NFS4ERR_RETRY_UNCACHED_REP,
-        NFS4ERR_SERVERFAULT,
-        NFS4ERR_STALE,
-        NFS4ERR_TOO_MANY_OPS,
-        NFS4ERR_UNKNOWN_LAYOUTTYPE,
-        NFS4ERR_WRONG_CRED,
-        NFS4ERR_WRONG_TYPE
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-  <section anchor="ss_op_LAYOUT_WCC_opt" numbered="true" removeInRFC="false" toc="default">
-    <name>Extension of Existing Implementations</name>
-    <t>
-      The new LAYOUT_WCC operation is <bcp14>OPTIONAL</bcp14> for both
-      NFSv4.2 (<xref target="RFC7863" format="default" sectionFormat="of"/>)
-      and the flexible files layout type (<xref target="RFC8435" format="default"
-       sectionFormat="of"/>).
-    </t>
-  </section>
-  <section anchor="ss_op_LAYOUT_WCC_ff" numbered="true" removeInRFC="false" toc="default">
-    <name>Flex Files Layout Type</name>
-    <sourcecode name="" type="" markers="true"><![CDATA[
-/// struct ff_data_server_wcc4 {
-///             deviceid4            ffdsw_deviceid;
-///             stateid4             ffdsw_stateid;
-///             nfs_fh4              ffdsw_fh_vers<>;
-///             fattr4               ffdsw_attributes;
-/// };
-///
-/// struct ff_mirror_wcc4 {
-///             ff_data_server_wcc4  ffmw_data_servers<>;
-/// };
-///
-/// struct ff_layout_wcc4 {
-///             ff_mirror_wcc4       fflw_mirrors<>;
-/// };
-]]>
-    </sourcecode>
-    <t>
-      The flex file layout type specific results <bcp14>SHOULD</bcp14> correspond
-      to the ff_layout4 data structure as defined in Section 5.1 of
-      <xref target="RFC8435" format="default" sectionFormat="of"/>.
-      There <bcp14>SHOULD</bcp14> be a one-to-one correspondence between:
-    </t>
-    <ul spacing="normal">
-      <li>
-        ff_data_server4 -&gt; ff_data_server_wcc4
-      </li>
-      <li>
-        ff_mirror4 -&gt; ff_mirror_wcc4
-      </li>
-      <li>
-        ff_layout4 -&gt; ff_layout_wcc4
-      </li>
-    </ul>
-    <t>
-      Each ff_layout4 has an array of ff_mirror4, which have an array of ff_data_server4.
-      Based on the current filehandle and the lowa_stateid, the server can match the
-      reported attributes.
-    </t>
-    <t>
-      But the positional correspondence between the elements is not
-      sufficient to determine the attributes to update. Consider the
-      case where a layout had three mirrors and two of them had updated
-      attributes, but the third did not. A client could decide to present
-      all three mirrors, with one mirror having an attribute mask with
-      no attributes present. Or it could decide to present only the
-      two mirrors which had been changed.
-    </t>
-    <t>
-      In either case, the combination of ffdsw_deviceid, ffdsw_stateid, and
-      ffdsw_fh_vers will uniquely identify the attributes to be updated.
-      All three arguments are required. A layout might have multiple data
-      files on the same storage device, in which case the ffdsw_deviceid and
-      ffdsw_stateid would match, but the ffdsw_fh_vers would not.
-    </t>
-    <t>
-      The ffdsw_attributes are processed similar to the obj_attributes in
-      the SETATTR arguments (See Section 18.34 of <xref target="RFC8881" format="default" sectionFormat="of"/>).
-    </t>
-  </section>
-</section>
-
 <section anchor="xdr_desc" numbered="true" removeInRFC="false" toc="default">
   <name>Extraction of XDR</name>
   <t>
@@ -798,8 +570,6 @@ sh extract.sh < spec.txt > delstid_prot.x
   <references>
   <name>Normative References</name>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml"/>
-    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml"/>
@@ -808,11 +578,7 @@ sh extract.sh < spec.txt > delstid_prot.x
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7863.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
-    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8178.xml"/>
-    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8435.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml"/>
   </references>
