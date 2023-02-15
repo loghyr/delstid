@@ -198,8 +198,8 @@
        Each NFSv3 operation corresponds to one round trip between the
        client and server. So a WRITE followed by a GETATTR would require
        two round trips. In that scenario, the attribute information
-       retrieved is considered to be strict server-client consistency for
-       a cache consistency protocol. For NFSv4, the WRITE and GETATTR can
+       retrieved is considered to be strict server-client consistency.
+       For NFSv4, the WRITE and GETATTR can
        be issued together inside a compound, which only requires one round
        trip between the client and server. And this is also considered
        to be a strict server-client consistency. In essence, the NFSv4
@@ -318,10 +318,10 @@
 ]]>
     </sourcecode>
     <t>
-      The flex file layout type specific results <bcp14>SHOULD</bcp14> correspond
+      The flex file layout type specific results <bcp14>MUST</bcp14> correspond
       to the ff_layout4 data structure as defined in Section 5.1 of
       <xref target="RFC8435" format="default" sectionFormat="of"/>.
-      There <bcp14>SHOULD</bcp14> be a one-to-one correspondence between:
+      There <bcp14>MUST</bcp14> be a one-to-one correspondence between:
     </t>
     <ul spacing="normal">
       <li>
