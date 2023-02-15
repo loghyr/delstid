@@ -46,8 +46,7 @@
       server of changes to the data part of the file. The client has knowledge
       of such updates, but lacks the ability to update the metadata server.
       This document presents several refinements to
-      both <xref target="RFC8881" format="default" sectionFormat="of"/> and
-      <xref target="RFC8434" format="default" sectionFormat="of"/> to
+      both RFC8881 and RFC8434 to
       allow the client to update the metadata server to changes on the
       data server.
     </t>
@@ -209,8 +208,8 @@
      </t>
      <t>
        With the flexible files layout type, the client can leverage
-       the NFSv3 WCC to service the proxying of times (See <xref
-       target="sec_proxy" format="default" sectionFormat="of"/>).
+       the NFSv3 WCC to service the proxying of times (See Section 4 of <xref
+       target="delstid" format="default" sectionFormat="of"/>).
        But the granularity of this data is limited. With client side
        mirroring (See Section 8 of <xref target="RFC8435" format="default"
        sectionFormat="of"/>), the client has to aggregate the N mirrored
@@ -442,8 +441,6 @@ sh extract.sh < spec.txt > layout_wcc.x
   <references>
   <name>Normative References</name>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml"/>
-    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml"/>
@@ -452,6 +449,8 @@ sh extract.sh < spec.txt > layout_wcc.x
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7863.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8178.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8434.xml"/>
@@ -459,10 +458,27 @@ sh extract.sh < spec.txt > layout_wcc.x
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8435.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml"/>
+
+    <reference anchor='delstid'>
+      <front>
+        <title>Extending the Opening of Files in NFSv4.2</title>
+        <author initials="T." surname="Haynes" fullname="T. Haynes">
+          <organization>Hammerspace</organization>
+        </author>
+        <author initials="T." surname="Myklebust" fullname="T. Myklebust">
+          <organization>Hammerspace</organization>
+        </author>
+        <date year="2023" month="February" />
+      </front>
+      <seriesInfo name="draft-ietf-nfsv4-delstid-02.xml" value="(Work In Progress)"/>
+    </reference>
+
   </references>
 
   <references>
   <name>Informative References</name>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1813.xml"/>
     <reference anchor="LEGAL" target="http://trustee.ietf.org/docs/IETF-Trust-License-Policy.pdf">
       <front>
         <title abbrev="Legal Provisions">Legal Provisions Relating to IETF Documents</title>

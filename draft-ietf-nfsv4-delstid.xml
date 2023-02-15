@@ -43,8 +43,7 @@
       The Network File System v4 (NFSv4) allows a client to both open
       a file and be granted a delegation of that file.  This provides
       the client the right to cache metadata on the file locally.
-      This document presents several refinements to
-      <xref target="RFC8881" format="default" sectionFormat="of"/> for
+      This document presents several refinements to RFC8881 for
       both the opening and delegating of the file  to the client.
     </t>
   </abstract>
@@ -577,6 +576,8 @@ sh extract.sh < spec.txt > delstid_prot.x
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7863.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8178.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
