@@ -269,6 +269,13 @@
     with NFS4ERR_DELAY.
   </t>
   <t>
+    Note that the SETATTR <bcp14>SHOULD</bcp14> either be in
+    a separate compound before the one containing the DELEGRETURN or
+    if in the same compound, as an operation before the DELEGRETURN.
+    Failure to properly sequence the operations may lead to race
+    cases.
+  </t>
+  <t>
     A key prerequisite of this approach is that the server and client
     are in time synchronization with each other.  Note that while
     the base NFSv4.2 does not require such synchronization, the
