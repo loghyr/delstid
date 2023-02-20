@@ -19,7 +19,7 @@
 
 <front>
   <title abbrev="LAYOUT_WCC">
-    Add LAYOUT_WCC to NFSv4.2
+    Add LAYOUT_WCC to NFSv4.2's Flex File Layout Type
   </title>
   <seriesInfo name="Internet-Draft" value="draft-haynes-nfsv4-layoutwcc-VERSIONVAR"/>
   <author fullname="Thomas Haynes" initials="T." surname="Haynes">
@@ -46,7 +46,7 @@
       update the metadata server of changes to the data part of the
       file. The client has knowledge of such updates, but lacks the
       ability to update the metadata server.  This document presents a
-      refinement to RFC8434 to allow the client to update the metadata
+      refinement to RFC8435 to allow the client to update the metadata
       server to changes on the data server.
     </t>
   </abstract>
