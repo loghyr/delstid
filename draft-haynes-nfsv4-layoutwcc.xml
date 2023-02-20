@@ -13,7 +13,7 @@
  symRefs="true"
  tocDepth="3"
  tocInclude="true"
- updates="8881"
+ updates="8435"
  version="3"
  xml:lang="en">
 
@@ -40,15 +40,14 @@
   <keyword>NFSv4</keyword>
   <abstract>
     <t>
-      The Parallel Network File System (pNFS) allows for a file's
-      metadata (MDS) and data (DS) to be on different servers. It does not
-      provide a mechanism for the data server to update the metadata
-      server of changes to the data part of the file. The client has knowledge
-      of such updates, but lacks the ability to update the metadata server.
-      This document presents several refinements to
-      both RFC8881 and RFC8434 to
-      allow the client to update the metadata server to changes on the
-      data server.
+      The Parallel Network File System (pNFS) Flexible File Layout allows
+      for a file's metadata (MDS) and data (DS) to be on different
+      servers. It does not provide a mechanism for the data server to
+      update the metadata server of changes to the data part of the
+      file. The client has knowledge of such updates, but lacks the
+      ability to update the metadata server.  This document presents a
+      refinement to RFC8434 to allow the client to update the metadata
+      server to changes on the data server.
     </t>
   </abstract>
 
@@ -70,7 +69,7 @@
   <name>Introduction</name>
   <t>
     In the Network File System version4 (NFSv4) with a Parallel NFS
-    (pNFS) (see Section 12 of <xref target="RFC8881" format="default"
+    (pNFS) Flexible File Layout (<xref target="RFC8435" format="default"
     sectionFormat="of"/>) server, there is no mechanism for the data
     servers to update the metadata servers for when the data portion
     of the file is modified.  The metadata server needs this knowledge
@@ -172,8 +171,8 @@
        When using pNFS (See Section 12 of <xref target="RFC8881"
        format="default" sectionFormat="of"/>), the client is most likely
        to be performing file operations to the storage device and not the
-       metadata server. With some layout types (most notably the flexible
-       files layout type in <xref target="RFC8435" format="default"
+       metadata server. With a NFSv3 data server in the flexible
+       files layout type (in <xref target="RFC8435" format="default"
        sectionFormat="of"/>) there is no control protocol (<xref target="RFC8434"
        format="default" sectionFormat="of"/>) between the
        metadata server and the storage device. In order to update the
@@ -184,10 +183,10 @@
        to query the storage device for the data file attributes.
      </t>
      <t>
-       For example, with a flexible files layout type, the metadata server
+       For example, the metadata server
        would issue a NFSv3 GETATTR to the storage device. These queries
        are most likely triggered in response to a NFSv4 GETATTR to the
-       metadata server. Not only are these GETATTRs to the storage device
+       metadata server. Not only are these NFSv3 GETATTRs to the storage device
        individually expensive, the storage device can become inundated by
        a storm of such requests. NFSv3 solved a similar issue by having
        the READ and WRITE operations employ a post-operation attribute
@@ -498,7 +497,7 @@ sh extract.sh < spec.txt > layout_wcc.x
         all worked on the prototype at Hammerspace.
       </t>
       <t>
-        Dave Noveck provided reviews of the document.
+        Dave Noveck and Tigran Mkrtchyan provided reviews of the document.
       </t>
     </section>
 

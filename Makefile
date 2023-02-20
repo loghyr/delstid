@@ -5,7 +5,7 @@ YEAR=`date +%Y`
 MONTH=`date +%B`
 DAY=`date +%d`
 DS_VERS=03
-WCC_VERS=01
+WCC_VERS=02
 
 DS_BASEDOC=draft-ietf-nfsv4-delstid
 
