@@ -408,17 +408,21 @@
     (see Section 4.4.2) allows for extending a particular minor
     version of the NFSv4 protocol without requiring the definition
     of a new minor version.  The client can probe the capabilities of
-    the server and based on the  result, determine if both it and the
+    the server and based on the result, determine if both it and the
     server support optional features not previously specified as part
     of the minor version.
   </t>
   <t>
-    The XDR extensions presented in this section provide helpful support
-    when  the OPEN procedure is extended in such a fashion. It models
-    all of the parameters via bitmap4 data structures, which allows
-    for the addition of a new flag to any of the OPEN arguments
-    (see Section 18.16.1 of <xref target="RFC8881" format="default"
-    sectionFormat="of"/>). Two new flags are provided:
+    The fattr4_open_arguments attribute is a new XDR extension which
+    provides helpful support when the OPEN procedure is extended in
+    such a fashion. It models all of the parameters via bitmap4 data
+    structures, which allows for the addition of a new flag to any of
+    the OPEN arguments (see Section 18.16.1 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>). The scope of this attribute
+    applies to all objects with a matching fsid.
+  </t>
+  <t>
+    Two new flags are provided:
   </t>
   <ul spacing="normal">
     <li>
@@ -433,6 +437,23 @@
     <bcp14>OPTIONAL</bcp14> functionality to OPEN, by creating a new
     flags for each <bcp14>OPTIONAL</bcp14> parameter.
   </t>
+  <t>
+    Since fattr4_open_arguments is a <bcp14>RECOMMENDED</bcp14> attribute, if the
+    server informs the client that it does not support this new
+    attribute, the client <bcp14>MUST</bcp14> determine that
+    the additional new <bcp14>OPTIONAL</bcp14> functionality to OPEN
+    is also not supported.
+  </t>
+  <t>
+    Some other concerns are how to process both currently
+    <bcp14>REQUIRED</bcp14> flags and <bcp14>OPTIONAL</bcp14> flags
+    which become <bcp14>REQUIRED</bcp14> in the future.  The server
+    <bcp14>MUST</bcp14> mark <bcp14>REQUIRED</bcp14> as being supported.
+    Note that as these flags <bcp14>MUST</bcp14> only change from
+    <bcp14>OPTIONAL</bcp14> to <bcp14>REQUIRED</bcp14> when the NFSv4
+    minor version is incremented.
+  </t>
+    
   <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// struct open_arguments4 {
