@@ -66,19 +66,20 @@
 <section anchor="sec_intro" numbered="true" removeInRFC="false" toc="default">
   <name>Introduction</name>
   <t>
-    In the Network File System version4 (NFSv4) a client may be granted
+    In the Network File System version4 (NFSv4), a client may be granted
     a delegation for a file. This allows the client to act as the
-    authority of the file's metadata and data. In this document, we
-    introduce some new semantics to both the open and the delegation
-    process which allows the client to:
+    authority for the file's metadata and data. This document presents
+    a number of extensions which enhance the functionality of opens and
+    delegations. These allow the client to:
   </t>
   <ul spacing="normal">
     <li>
-      detect an offline file, which may be located off premise.
+      detect an offline file, which may require significant effort to obtain.
     </li>
     <li>
-      determine the extension of OPEN (see Section 18.16 of <xref
-      target="RFC8881" format="default" sectionFormat="of"/>) flags.
+      determine which extensions of OPEN (see Section 18.16 of <xref
+      target="RFC8881" format="default" sectionFormat="of"/>) flags are
+      supported by the server.
     </li>
     <li>
       during the OPEN procedure, get either the open
