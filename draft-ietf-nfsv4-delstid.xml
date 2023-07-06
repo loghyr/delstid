@@ -147,12 +147,13 @@
   <t>
     If a file is offline, then the server has immediate high-performance
     access to the file's attributes, but not to the file's content.
-    The cost of retrieving the data content is expensive, to the extent
+    The action of retrieving the data content is expensive, to the extent
     that the content should only be retrieved if it is going to be used.
-    For example, a graphical file manager (such as OSX's Finder) may want
-    to access the beginning of the file to preview it for an user who is
-    hovering their pointer over the file name.  If the file is retrieved,
-    it will most likely either be immediately thrown away or returned.
+    For example, a graphical file manager (such as OSX's Finder) may
+    want to access the beginning of the file to preview it for an user
+    who is hovering their pointer over the file name and not accessing
+    it otherwise.  If the file is retrieved, it will most likely either
+    be immediately thrown away or returned.
   </t>
   <t>
     A compound with a GETATTR or READDIR can report the file's attributes
@@ -166,14 +167,14 @@
     content to be retrieved from offline storage.
   </t>
   <t>
-    If an operating system is not aware that the file is offline, it
-    might inadvertently open the file to determine what type of file it is
-    accessing.  By adding the new attribute FATTR4_OFFLINE, a client can
-    predetermine the availability of the file, avoiding the need to open
-    it at all. Being offline might also involve situations in which the
-    file is archived in the cloud, i.e., there can be an expense in both
-    retrieving the file to bring online and in sending the file back to
-    offline status.
+    If the client is not aware that the file is offline, it might
+    inadvertently open the file to determine what type of file it
+    is accessing.  By interrogating the new attribute FATTR4_OFFLINE,
+    a client can predetermine the availability of the file, avoiding the
+    need to open it at all. Being offline might also involve situations
+    in which the file is archived in the cloud, i.e., there can be an
+    expense in both retrieving the file to bring online and in sending
+    the file back to offline status.
   </t>
   <sourcecode name="" type="" markers="true"><![CDATA[
 ///
