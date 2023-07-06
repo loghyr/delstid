@@ -223,6 +223,41 @@
     format="default" sectionFormat="of"/>), will  also be set to the
     special all zero stateid.
   </t>
+  <section anchor="delstid_analysis" numbered="true" removeInRFC="false" toc="default">
+  <name>Implementation Experience</name>
+    <t>
+      The CLOSE operation neither explicitly nor implicitly releases any
+      delegation stateids. This is not symmetrical with the OPEN operation,
+      which can grant both an open and a delegation stateid.  This draft
+      could have tried to extend the CLOSE operation to release both
+      stateids, but implementation experience shows that is more costly
+      than the approach which has been proposed.
+    </t>
+    <t>
+      Consider a small workload of creating a file with content. That
+      takes 3 synchronous and 1 asynchronous operations with existing
+      implementations. The first synchronous one has to OPEN the file,
+      the second synchronous one performs the WRITE to the file, the third
+      synchronous one has to CLOSE the file, and the fourth asynchronous
+      one uses DELEGRETURN to return the delegation stateid.
+    </t> 
+    <t>
+      With the proposed approach of setting the
+      OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag during
+      the OPEN, the number of operations is always 3.  The first two
+      compounds are still synchronous, but the last is asynchronous. I.e.,
+      since the client no longer has to send a CLOSE operation, it can
+      delay the DELEGRETURN until either the server requests it back
+      via delegation recall or garbage collection causes the client to
+      return the stateid.
+    </t>
+    <t>
+      This approach reduces the cost of synchronous operations by 33%
+      and the total number of operations by 25%. Contrast that against
+      the alternative proposal of having CLOSE return both stateids,
+      which would not reduce the number of synchronous operations.
+    </t>
+  </section>
 </section>
 
 <section anchor="sec_proxy" numbered="true" removeInRFC="false" toc="default">
