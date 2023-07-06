@@ -651,7 +651,7 @@ sh extract.sh < spec.txt > delstid_prot.x
         all worked on the prototype at Hammerspace.
       </t>
       <t>
-        Dave Noveck provided reviews of the document.
+        Dave Noveck, Chuck Lever, and Rick Macklem provided reviews of the document.
       </t>
     </section>
 
