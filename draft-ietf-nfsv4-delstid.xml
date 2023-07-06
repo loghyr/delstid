@@ -107,19 +107,21 @@
     <dl newline="false" spacing="normal">
       <dt>delegation:</dt>
       <dd>
-        A file delegation, which is a recall-able lock that assures the
+        A file delegation, which is a recallable lock that assures the
         holder that inconsistent opens and file changes cannot occur so
         long as the delegation is held.
       </dd>
       <dt>proxy:</dt>
       <dd>
-        A proxy of attributes occurs when the client has the authority
-        to represent the server's attributes.
+        Proxying of attributes occurs when a client has the authority
+        to represent the attributes normally maintained by the server.
+        The client having this authority is the "proxy" for those
+        attributes.
       </dd>
       <dt>stateid:</dt>
       <dd>
         A stateid is a 128-bit quantity returned by a server that uniquely
-        defines state held by the server for the client. (See Section
+        designates state held by the server for the client. (See Section
         8 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
       </dd>
     </dl>
