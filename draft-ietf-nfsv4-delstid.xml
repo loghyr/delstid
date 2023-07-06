@@ -192,24 +192,24 @@
 <section anchor="sec_open_xor" numbered="true" removeInRFC="false" toc="default">
   <name>OPEN grants only one of Open or Delegation Stateid</name>
   <t>
-    The OPEN (See Section 18.16 of <xref target="RFC8881"
-    format="default" sectionFormat="of"/>) procedure returns an
-    open stateid to the client to reference the state of the file.
-    The client could also request a delegation stateid in the OPEN
-    arguments.  The file is said to be "open" to the client as long
-    as the count of open and delegated stateids is greater than 0.
-    Either type of stateid is sufficient to enable the server to
-    treat the file as if it were open,
-    which allows READ (See Section 18.25 of <xref target="RFC8881"
+    The OPEN (See Section 18.16 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>) procedure returns an open stateid to the
+    client to reference the state of the file.  The client could also
+    request a delegation stateid in the OPEN arguments.  The file can
+    be considered open for the client as long as the count of open
+    and delegated stateids is greater than 0.  Either type of stateid
+    is sufficient to enable the server to treat the file as if it were
+    open, which allows READ (See Section 18.25 of <xref target="RFC8881"
     format="default" sectionFormat="of"/>), WRITE (See Section 18.38
     of <xref target="RFC8881" format="default" sectionFormat="of"/>),
     LOCK (See Section 18.12 of <xref target="RFC8881" format="default"
     sectionFormat="of"/>), and LAYOUTGET (see Section 18.50 of <xref
     target="RFC8881" format="default" sectionFormat="of"/>) operations
     to proceed. If the client gets both a open and a delegation stateid
-    as part of the OPEN, then it has to return them both.  And during
-    each operation, the client can send a costly GETATTR (See Section
-    18.9 of <xref target="RFC8881" format="default" sectionFormat="of"/>).
+    as part of the OPEN, then it has to return them both.  A further
+    consideration is that during each operation, the client can send
+    a costly GETATTR (See Section 18.9 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>).
   </t>
   <t>
     If the client knows that the server supports the
