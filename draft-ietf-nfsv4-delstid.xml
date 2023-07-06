@@ -593,15 +593,15 @@ sh extract.sh < spec.txt > delstid_prot.x
 <section anchor="sec_security" numbered="true" removeInRFC="false" toc="default">
   <name>Security Considerations</name>
   <t>
-    There are no new security considerations beyond those in
-    <xref target="RFC7862" format="default" sectionFormat="of"/>.
+    The features described in this document do not introduce any new security
+    considerations.
   </t>
 </section>
 
 <section anchor="sec_iana" numbered="true" removeInRFC="false" toc="default">
   <name>IANA Considerations</name>
   <t>
-    IANA should use the current document (RFC-TBD) as the reference for the new entries.
+    There are no IANA considerations.
   </t>
 </section>
 
