@@ -371,7 +371,7 @@
     sectionFormat="of"/>), and LAYOUTGET (see Section 18.50 of <xref
     target="RFC8881" format="default" sectionFormat="of"/>) operations
     to proceed. If the client gets both a open and a delegation stateid
-    as part of the OPEN, then it has to return them both.  A further
+    as part of the OPEN, then it has to return them both to the server.  A further
     consideration is that during each operation, the client can send
     a costly GETATTR (See Section 18.9 of <xref target="RFC8881"
     format="default" sectionFormat="of"/>).
@@ -444,11 +444,13 @@
     protocol, it can only determine the size of the file and the change
     attribute. In the case of the client holding the delegation, it has
     the current values of the access and modify times.  There is no way
-    that other clients can have access to these values. While it is the
-    authority for these values, it has no way to transfer these values
-    to the server when the delegation is being returned and the server
-    reclaims its authority with regard to these values. Similarly, there
-    is no current provision to obtain these values before delegation
+    that other clients can have access to these values.  While the
+    client could send a compound of the form: SEQ, PUTFH,
+    SETATTR (time_modify | time_access), DELEGRETURN, to notify
+    the server of the proxied values, that SETATTR operation would
+    cause either or both of FATTR4_CHANGE or FATTR4_TIME_METADATA to
+    be modified to the current time on the server.
+    There is no current provision to obtain these values before delegation
     return using CB_GETATTR. As a result, it can not pass these times up
     to an application expecting POSIX compliance, as is often necessary
     for correct operation.
