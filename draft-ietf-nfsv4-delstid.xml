@@ -13,7 +13,7 @@
  symRefs="true"
  tocDepth="3"
  tocInclude="true"
- updates="8881"
+ updates="8881, 7863"
  version="3"
  xml:lang="en">
 
@@ -44,8 +44,8 @@
       file and be granted a delegation of that file.  This delegation
       provides the client the right to authoritatively cache metadata
       on the file locally.  This document presents several extensions
-      to RFC8881 for both the opening and delegating of the file  to
-      the client.
+      for both the opening and delegating of the file  to
+      the client. This document updates both RFC8881 and RFC7863.
     </t>
   </abstract>
 
@@ -107,22 +107,29 @@
     <dl newline="false" spacing="normal">
       <dt>delegation:</dt>
       <dd>
-        A file delegation, which is a recallable lock that assures the
-        holder that inconsistent opens and file changes cannot occur so
-        long as the delegation is held.
+        A file delegation, which is a recallable stateid ((See Section
+        8 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
+        that assures the holder that inconsistent opens and file changes
+        cannot occur so long as the delegation is held.
+      </dd>
+      <dt>offline file:</dt>
+      <dd>
+        A file which exists on a device which is not connected to the
+        server. There is typically a cost associated with bringing the
+        file to an online status. Historically this would be a file on
+        tape media and the cost would have been finding and loading the
+        tape. A more modern interpretation is that the file is in the
+        cloud and the cost is a monetary one in downloading the file.
       </dd>
       <dt>proxy:</dt>
       <dd>
-        Proxying of attributes occurs when a client has the authority
-        to represent the attributes normally maintained by the server.
-        The client having this authority is the "proxy" for those
-        attributes.
-      </dd>
-      <dt>stateid:</dt>
-      <dd>
-        A stateid is a 128-bit quantity returned by a server that uniquely
-        designates state held by the server for the client. (See Section
-        8 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
+        Proxying of attributes occurs when a client has the authority, as
+        granted by the appropriate delegation, to represent the attributes
+        normally maintained by the server.  For read attributes, this
+        occurs when the client has either a read or write delegations
+        for the file. For write attributes, this occurs when the client
+        has a write delegation for the file.  The client having this
+        authority is the "proxy" for those attributes.
       </dd>
     </dl>
   </section>
@@ -190,6 +197,164 @@
   </sourcecode>
 </section>
 
+<section anchor="ssec_open_xor_xdr" numbered="true" removeInRFC="false" toc="default">
+  <name>Determining OPEN Feature Support</name>
+  <t>
+    <xref target="RFC8178" format="default" sectionFormat="of"/>
+    (see Section 4.4.2) allows for extending a particular minor
+    version of the NFSv4 protocol without requiring the definition
+    of a new minor version.  The client can probe the capabilities of
+    the server and based on the result, determine if both it and the
+    server support optional features not previously specified as part
+    of the minor version.
+  </t>
+  <t>
+    The fattr4_open_arguments attribute is a new XDR extension which
+    provides helpful support when the OPEN procedure is extended in
+    such a fashion. It models all of the parameters via bitmap4 data
+    structures, which allows for the addition of a new flag to any of
+    the OPEN arguments (see Section 18.16.1 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>). The scope of this attribute
+    applies to all objects with a matching fsid.
+  </t>
+  <t>
+    Two new flags are provided:
+  </t>
+  <ul spacing="normal">
+    <li>
+      OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
+      (see <xref target="sec_open_xor" format="default" sectionFormat="of"/>)
+    </li>
+    <li>
+      OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
+      (see <xref target="sec_proxy" format="default" sectionFormat="of"/>)
+    </li>
+  </ul>
+  <t>
+    Subsequent extensions can use this framework when introducing new
+    <bcp14>OPTIONAL</bcp14> functionality to OPEN, by creating a new
+    flags for each <bcp14>OPTIONAL</bcp14> parameter.
+  </t>
+  <t>
+    Since fattr4_open_arguments is a <bcp14>RECOMMENDED</bcp14> attribute, if the
+    server informs the client that it does not support this new
+    attribute, the client <bcp14>MUST</bcp14> take this to mean that
+    the additional new <bcp14>OPTIONAL</bcp14> functionality to OPEN
+    is also not supported.
+  </t>
+  <t>
+    Some other concerns are how to process both currently
+    <bcp14>REQUIRED</bcp14> flags and <bcp14>OPTIONAL</bcp14> flags
+    which become <bcp14>REQUIRED</bcp14> in the future.  The server
+    <bcp14>MUST</bcp14> mark <bcp14>REQUIRED</bcp14> as being supported.
+    Note that as these flags <bcp14>MUST</bcp14> only change from
+    <bcp14>OPTIONAL</bcp14> to <bcp14>REQUIRED</bcp14> when the NFSv4
+    minor version is incremented.
+  </t>
+
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// struct open_arguments4 {
+///   bitmap4  oa_share_access;
+///   bitmap4  oa_share_deny;
+///   bitmap4  oa_share_access_want;
+///   bitmap4  oa_open_claim;
+///   bitmap4  oa_create_mode;
+/// };
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// enum open_args_share_access4 {
+///    OPEN_ARGS_SHARE_ACCESS_READ  = 1,
+///    OPEN_ARGS_SHARE_ACCESS_WRITE = 2,
+///    OPEN_ARGS_SHARE_ACCESS_BOTH  = 3
+/// };
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// enum open_args_share_deny4 {
+///    OPEN_ARGS_SHARE_DENY_NONE  = 0,
+///    OPEN_ARGS_SHARE_DENY_READ  = 1,
+///    OPEN_ARGS_SHARE_DENY_WRITE = 2,
+///    OPEN_ARGS_SHARE_DENY_BOTH  = 3
+/// };
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// enum open_args_share_access_want4 {
+///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 3,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            = 4,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              = 5,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
+///                                                    = 17,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED
+///                                                    = 18,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    = 20,
+///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21
+/// };
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// enum open_args_open_claim4 {
+///    OPEN_ARGS_OPEN_CLAIM_NULL          = 0,
+///    OPEN_ARGS_OPEN_CLAIM_PREVIOUS      = 1,
+///    OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR  = 2,
+///    OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV = 3,
+///    OPEN_ARGS_OPEN_CLAIM_FH            = 4,
+///    OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH  = 5,
+///    OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH = 6
+/// };
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// enum open_args_createmode4 {
+///    OPEN_ARGS_CREATEMODE_UNCHECKED4     = 0,
+///    OPEN_ARGS_CREATE_MODE_GUARDED       = 1,
+///    OPEN_ARGS_CREATEMODE_EXCLUSIVE4     = 2,
+///    OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1  = 3
+/// };
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// typedef open_arguments4 fattr4_open_arguments;
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// %/*
+/// % * Determine what OPEN supports.
+/// % */
+/// const FATTR4_OPEN_ARGUMENTS     = 86;
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
+///
+ ]]>
+  </sourcecode>
+  <sourcecode name="" type="" markers="true"><![CDATA[
+///
+/// const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
+///
+ ]]>
+  </sourcecode>
+</section>
+
 <section anchor="sec_open_xor" numbered="true" removeInRFC="false" toc="default">
   <name>OPEN grants only one of Open or Delegation Stateid</name>
   <t>
@@ -231,7 +396,9 @@
   <section anchor="delstid_analysis" numbered="true" removeInRFC="false" toc="default">
   <name>Implementation Experience</name>
     <t>
-      The CLOSE operation neither explicitly nor implicitly releases any
+      The CLOSE operation (see Section
+      18.2 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
+      neither explicitly nor implicitly releases any
       delegation stateids. This is not symmetrical with the OPEN operation,
       which can grant both an open and a delegation stateid.  This draft
       could have tried to extend the CLOSE operation to release both
@@ -244,8 +411,10 @@
       implementations. The first synchronous one has to OPEN the file,
       the second synchronous one performs the WRITE to the file, the third
       synchronous one has to CLOSE the file, and the fourth asynchronous
-      one uses DELEGRETURN to return the delegation stateid.
-    </t> 
+      one uses DELEGRETURN (see Section
+      18.6 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
+      to return the delegation stateid.
+    </t>
     <t>
       With the proposed approach of setting the
       OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag during
@@ -409,162 +578,6 @@
   </section>
 </section>
 
-<section anchor="ssec_open_xor_xdr" numbered="true" removeInRFC="false" toc="default">
-  <name>Determining OPEN Feature Support</name>
-  <t>
-    <xref target="RFC8178" format="default" sectionFormat="of"/>
-    (see Section 4.4.2) allows for extending a particular minor
-    version of the NFSv4 protocol without requiring the definition
-    of a new minor version.  The client can probe the capabilities of
-    the server and based on the result, determine if both it and the
-    server support optional features not previously specified as part
-    of the minor version.
-  </t>
-  <t>
-    The fattr4_open_arguments attribute is a new XDR extension which
-    provides helpful support when the OPEN procedure is extended in
-    such a fashion. It models all of the parameters via bitmap4 data
-    structures, which allows for the addition of a new flag to any of
-    the OPEN arguments (see Section 18.16.1 of <xref target="RFC8881"
-    format="default" sectionFormat="of"/>). The scope of this attribute
-    applies to all objects with a matching fsid.
-  </t>
-  <t>
-    Two new flags are provided:
-  </t>
-  <ul spacing="normal">
-    <li>
-      OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION (see <xref target="sec_open_xor" format="default" sectionFormat="of"/>)
-    </li>
-    <li>
-      OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS (see <xref target="sec_proxy" format="default" sectionFormat="of"/>)
-    </li>
-  </ul>
-  <t>
-    Subsequent extensions can use this framework when introducing new
-    <bcp14>OPTIONAL</bcp14> functionality to OPEN, by creating a new
-    flags for each <bcp14>OPTIONAL</bcp14> parameter.
-  </t>
-  <t>
-    Since fattr4_open_arguments is a <bcp14>RECOMMENDED</bcp14> attribute, if the
-    server informs the client that it does not support this new
-    attribute, the client <bcp14>MUST</bcp14> determine that
-    the additional new <bcp14>OPTIONAL</bcp14> functionality to OPEN
-    is also not supported.
-  </t>
-  <t>
-    Some other concerns are how to process both currently
-    <bcp14>REQUIRED</bcp14> flags and <bcp14>OPTIONAL</bcp14> flags
-    which become <bcp14>REQUIRED</bcp14> in the future.  The server
-    <bcp14>MUST</bcp14> mark <bcp14>REQUIRED</bcp14> as being supported.
-    Note that as these flags <bcp14>MUST</bcp14> only change from
-    <bcp14>OPTIONAL</bcp14> to <bcp14>REQUIRED</bcp14> when the NFSv4
-    minor version is incremented.
-  </t>
-    
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// struct open_arguments4 {
-///   bitmap4  oa_share_access;
-///   bitmap4  oa_share_deny;
-///   bitmap4  oa_share_access_want;
-///   bitmap4  oa_open_claim;
-///   bitmap4  oa_create_mode;
-/// };
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// enum open_args_share_access4 {
-///    OPEN_ARGS_SHARE_ACCESS_READ  = 1,
-///    OPEN_ARGS_SHARE_ACCESS_WRITE = 2,
-///    OPEN_ARGS_SHARE_ACCESS_BOTH  = 3
-/// };
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// enum open_args_share_deny4 {
-///    OPEN_ARGS_SHARE_DENY_NONE  = 0,
-///    OPEN_ARGS_SHARE_DENY_READ  = 1,
-///    OPEN_ARGS_SHARE_DENY_WRITE = 2,
-///    OPEN_ARGS_SHARE_DENY_BOTH  = 3
-/// };
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// enum open_args_share_access_want4 {
-///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 3,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_NO_DELEG            = 4,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_CANCEL              = 5,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_SIGNAL_DELEG_WHEN_RESRC_AVAIL
-///                                                    = 17,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_PUSH_DELEG_WHEN_UNCONTENDED
-///                                                    = 18,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS    = 20,
-///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21
-/// };
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// enum open_args_open_claim4 {
-///    OPEN_ARGS_OPEN_CLAIM_NULL          = 0,
-///    OPEN_ARGS_OPEN_CLAIM_PREVIOUS      = 1,
-///    OPEN_ARGS_OPEN_CLAIM_DELEGATE_CUR  = 2,
-///    OPEN_ARGS_OPEN_CLAIM_DELEGATE_PREV = 3,
-///    OPEN_ARGS_OPEN_CLAIM_FH            = 4,
-///    OPEN_ARGS_OPEN_CLAIM_DELEG_CUR_FH  = 5,
-///    OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH = 6
-/// };
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// enum open_args_createmode4 {
-///    OPEN_ARGS_CREATEMODE_UNCHECKED4     = 0,
-///    OPEN_ARGS_CREATE_MODE_GUARDED       = 1,
-///    OPEN_ARGS_CREATEMODE_EXCLUSIVE4     = 2,
-///    OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1  = 3
-/// };
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// typedef open_arguments4 fattr4_open_arguments;
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// %/*
-/// % * Determine what OPEN supports.
-/// % */
-/// const FATTR4_OPEN_ARGUMENTS     = 86;
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
-///
- ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
-///
-/// const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
-///
- ]]>
-  </sourcecode>
-</section>
-
 <section anchor="xdr_desc" numbered="true" removeInRFC="false" toc="default">
   <name>Extraction of XDR</name>
   <t>
@@ -597,13 +610,15 @@ sh extract.sh < spec.txt > delstid_prot.x
   </t>
   <t>
     Note that the XDR code contained in this document depends on types
-    from the NFSv4.2 nfs4_prot.x file (generated from <xref target="RFC7863" format="default" sectionFormat="of"/>).
+    from the NFSv4.2 nfs4_prot.x file (generated from
+    <xref target="RFC7863" format="default" sectionFormat="of"/>).
     This includes both nfs types that end with a 4, such as offset4,
     length4, etc., as well as more generic types such as uint32_t and
     uint64_t.
   </t>
   <t>
-    While the XDR can be appended to that from <xref target="RFC7863" format="default" sectionFormat="of"/>,
+    While the XDR can be appended to that from
+    <xref target="RFC7863" format="default" sectionFormat="of"/>,
     the various code snippets belong in their respective areas of the
     that XDR.
   </t>
@@ -622,8 +637,11 @@ sh extract.sh < spec.txt > delstid_prot.x
 <section anchor="sec_security" numbered="true" removeInRFC="false" toc="default">
   <name>Security Considerations</name>
   <t>
-    The features described in this document do not introduce any new security
-    considerations.
+    While we are extending some capabilities for client delegation, there are no
+    new security concerns.  The client cannot be queried by other clients as to
+    the cached attributes. The client could report false data for the cached
+    attributes, but it already has this ability via a SETATTR operation (see Section
+    18.30 of <xref target="RFC8881" format="default" sectionFormat="of"/>).
   </t>
 </section>
 
@@ -680,7 +698,8 @@ sh extract.sh < spec.txt > delstid_prot.x
         all worked on the prototype at Hammerspace.
       </t>
       <t>
-        Dave Noveck, Chuck Lever, and Rick Macklem provided reviews of the document.
+        Dave Noveck, Chuck Lever, Rick Macklem, and Zaheduzzaman Sarker
+        provided reviews of the document.
       </t>
     </section>
 
