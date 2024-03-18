@@ -483,8 +483,8 @@
     with NFS4ERR_DELAY.
   </t>
   <t>
-    These new attributes are invalid in GETATTR, VERIFY, and NVERIFY and
-    can only be used in CB_GETATTR and SETATTR by a  client holding an
+    These new attributes are invalid to be used with GETATTR, VERIFY, and NVERIFY and
+    can only be used with CB_GETATTR and SETATTR by a  client holding an
     appropriate delegation.  The SETATTR <bcp14>SHOULD</bcp14> either be
     in a separate compound before the one containing the DELEGRETURN or
     when in the same compound, as an operation before the DELEGRETURN.
