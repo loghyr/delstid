@@ -104,13 +104,6 @@
   <section anchor="sec_defs" numbered="true" removeInRFC="false" toc="default">
     <name>Definitions</name>
     <dl newline="false" spacing="normal">
-      <dt>delegation:</dt>
-      <dd>
-        A file delegation, which is a recallable stateid ((See Section
-        8 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
-        that assures the holder that inconsistent opens and file changes
-        cannot occur so long as the delegation is held.
-      </dd>
       <dt>offline file:</dt>
       <dd>
         A file which exists on a device which is not connected to the
@@ -182,18 +175,22 @@
     expense in both retrieving the file to bring online and in sending
     the file back to offline status.
   </t>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+
+  <section anchor="ssec_offline_attr" numbered="true" removeInRFC="false" toc="default">
+    <name>XDR for Offline Attribute</name>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// typedef bool            fattr4_offline;
 ///
 ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const FATTR4_OFFLINE            = 83;
 ///
 ]]>
-  </sourcecode>
+    </sourcecode>
+  </section>
 </section>
 
 <section anchor="ssec_open_xor_xdr" numbered="true" removeInRFC="false" toc="default">
@@ -232,11 +229,11 @@
   <t>
     Subsequent extensions can use this framework when introducing new
     <bcp14>OPTIONAL</bcp14> functionality to OPEN, by creating a new
-    flags for each <bcp14>OPTIONAL</bcp14> parameter.
+    flag for each <bcp14>OPTIONAL</bcp14> parameter.
   </t>
   <t>
     Since fattr4_open_arguments is a <bcp14>RECOMMENDED</bcp14> attribute, if the
-    server informs the client that it does not support this new
+    server informs the client via NFS4ERR_ATTRNOTSUPP that it does not support this new
     attribute, the client <bcp14>MUST</bcp14> take this to mean that
     the additional new <bcp14>OPTIONAL</bcp14> functionality to OPEN
     is also not supported.
@@ -251,7 +248,9 @@
     minor version is incremented.
   </t>
 
-  <sourcecode name="" type="" markers="true"><![CDATA[
+  <section anchor="ssec_open_xdr" numbered="true" removeInRFC="false" toc="default">
+    <name>XDR for Open Arguments</name>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// struct open_arguments4 {
 ///   bitmap4  oa_share_access;
@@ -262,8 +261,8 @@
 /// };
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_access4 {
 ///    OPEN_ARGS_SHARE_ACCESS_READ  = 1,
@@ -272,8 +271,8 @@
 /// };
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_deny4 {
 ///    OPEN_ARGS_SHARE_DENY_NONE  = 0,
@@ -283,8 +282,8 @@
 /// };
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_access_want4 {
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 3,
@@ -299,8 +298,8 @@
 /// };
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_open_claim4 {
 ///    OPEN_ARGS_OPEN_CLAIM_NULL          = 0,
@@ -313,8 +312,8 @@
 /// };
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_createmode4 {
 ///    OPEN_ARGS_CREATEMODE_UNCHECKED4     = 0,
@@ -324,14 +323,14 @@
 /// };
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// typedef open_arguments4 fattr4_open_arguments;
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// %/*
 /// % * Determine what OPEN supports.
@@ -339,19 +338,20 @@
 /// const FATTR4_OPEN_ARGUMENTS     = 86;
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
 ///
  ]]>
-  </sourcecode>
-  <sourcecode name="" type="" markers="true"><![CDATA[
+    </sourcecode>
+    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
 ///
  ]]>
-  </sourcecode>
+    </sourcecode>
+  </section>
 </section>
 
 <section anchor="sec_open_xor" numbered="true" removeInRFC="false" toc="default">
@@ -481,7 +481,7 @@
     with NFS4ERR_DELAY.
   </t>
   <t>
-    These new attributes are invalid GETATTR, VERIFY, and NVERIFY and
+    These new attributes are invalid in GETATTR, VERIFY, and NVERIFY and
     can only be used in CB_GETATTR and SETATTR by a  client holding an
     appropriate delegation.  The SETATTR <bcp14>SHOULD</bcp14> either be
     in a separate compound before the one containing the DELEGRETURN or
