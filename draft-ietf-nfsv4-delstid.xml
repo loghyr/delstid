@@ -13,7 +13,6 @@
  symRefs="true"
  tocDepth="3"
  tocInclude="true"
- updates="8881, 7863"
  version="3"
  xml:lang="en">
 
@@ -44,8 +43,8 @@
       file and be granted a delegation of that file.  This delegation
       provides the client the right to authoritatively cache metadata
       on the file locally.  This document presents several extensions
-      for both the opening and delegating of the file  to
-      the client. This document updates both RFC8881 and RFC7863.
+      for both the opening and delegating of the file to
+      the client. This document extends both RFC8881 and RFC7863.
     </t>
   </abstract>
 
