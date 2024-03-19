@@ -473,14 +473,15 @@
     it returns a valid delegation stateid for an OPEN operation which
     sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag, then it
     <bcp14>MUST</bcp14> query the client via a CB_GETATTR for the
-    FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
-    attribute. (The change time can be derived from the modify
+    FATTR4_TIME_DELEG_ACCESS(see <xref target="ssec_proxy_xdr"/>)  attribute and FATTR4_TIME_DELEG_MODIFY
+    attribute (see <xref target="ssec_proxy_xdr"/>). (The change time can be derived from the modify
     time.) Further, when it gets a SETATTR (see Section 18.34 of <xref
     target="RFC8881" format="default" sectionFormat="of"/>) in the same
     compound as the DELEGRETURN, then it <bcp14>MUST</bcp14> accept
     those FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
     attribute changes and derive the change time or reject the changes
-    with NFS4ERR_DELAY.
+    with NFS4ERR_DELAY (see Section 15.1.1.3 if <xref target="RFC8881" format="default"
+    sectionFormat="of"/>).
   </t>
   <t>
     These new attributes are invalid to be used with GETATTR, VERIFY, and NVERIFY and
@@ -496,14 +497,16 @@
     NFSv4.2 does not require such synchronization, the use of RPCSEC_GSS
     typically makes such a requirement. When the client presents either
     FATTR4_TIME_DELEG_ACCESS or FATTR4_TIME_DELEG_MODIFY attributes
-    to the server, the server <bcp14>MUST</bcp14> decide whether the
-    times presented are before the old times or past the current time.
+    to the server, the server <bcp14>MUST</bcp14> decide for both of
+    them whether the time presented is before the corresponding
+    FATTR4_TIME_ACCESS or FATTR4_TIME_MODIFY attribute
+    on the file or past the current server time.
     When the time presented is before the original time, then the update
     is ignored. When the time presented is in the future, the server
     can either clamp the new time to the current time, or it may return
     NFS4ERR_DELAY to the client, allowing it to retry.  Note that if the
     clock skew is large, the delay approach would result in access to
-    the file being denied until such time that the clock skew is exceeded.
+    the file being denied until the clock skew is exceeded.
   </t>
   <t>
     A change in the access time <bcp14>MUST NOT</bcp14> advance the change time,
