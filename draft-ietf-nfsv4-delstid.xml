@@ -44,7 +44,8 @@
       provides the client the right to authoritatively cache metadata
       on the file locally.  This document presents several extensions
       for both the opening and delegating of the file to
-      the client. This document extends both RFC8881 and RFC7863.
+      the client. This document extends both NFSv4.1 (see RFC8881)
+      and NFSv4.2 (see RFC7863).
     </t>
   </abstract>
 
@@ -242,7 +243,7 @@
     Some other concerns are how to process both currently
     <bcp14>REQUIRED</bcp14> flags and <bcp14>OPTIONAL</bcp14> flags
     which become <bcp14>REQUIRED</bcp14> in the future.  The server
-    <bcp14>MUST</bcp14> mark <bcp14>REQUIRED</bcp14> as being supported.
+    <bcp14>MUST</bcp14> mark <bcp14>REQUIRED</bcp14> flags as being supported.
     Note that as these flags <bcp14>MUST</bcp14> only change from
     <bcp14>OPTIONAL</bcp14> to <bcp14>REQUIRED</bcp14> when the NFSv4
     minor version is incremented.
@@ -370,10 +371,10 @@
     LOCK (See Section 18.12 of <xref target="RFC8881" format="default"
     sectionFormat="of"/>), and LAYOUTGET (see Section 18.50 of <xref
     target="RFC8881" format="default" sectionFormat="of"/>) operations
-    to proceed. If the client gets both a open and a delegation stateid
+    to proceed. If the client gets both an open and a delegation stateid
     as part of the OPEN, then it has to return them both to the server.  A further
     consideration is that during each operation, the client can send
-    a costly GETATTR (See Section 18.9 of <xref target="RFC8881"
+    a costly GETATTR (See Section 18.7 of <xref target="RFC8881"
     format="default" sectionFormat="of"/>).
   </t>
   <t>
