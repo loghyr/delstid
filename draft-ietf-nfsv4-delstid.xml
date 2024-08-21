@@ -400,7 +400,7 @@
       18.2 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
       neither explicitly nor implicitly releases any
       delegation stateids. This is not symmetrical with the OPEN operation,
-      which can grant both an open and a delegation stateid.  This draft
+      which can grant both an open and a delegation stateid.  This specification
       could have tried to extend the CLOSE operation to release both
       stateids, but implementation experience shows that is more costly
       than the approach which has been proposed.
