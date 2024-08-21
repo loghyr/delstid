@@ -627,16 +627,6 @@ sh extract.sh < spec.txt > delstid_prot.x
     the various code snippets belong in their respective areas of the
     that XDR.
   </t>
-  <section anchor="code_copyright" numbered="true" removeInRFC="false" toc="default">
-    <name>Code Components Licensing Notice</name>
-    <t>
-       Both the XDR description and the scripts used for extracting the
-       XDR description are Code Components as described in Section 4 of
-       <xref target="LEGAL" format="default" sectionFormat="of">"Legal
-       Provisions Relating to IETF Documents"</xref>.  These Code
-       Components are licensed according to the terms of that document.
-    </t>
-  </section>
 </section>
 
 <section anchor="sec_security" numbered="true" removeInRFC="false" toc="default">
@@ -680,19 +670,6 @@ sh extract.sh < spec.txt > delstid_prot.x
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8178.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8881.xml"/>
-  </references>
-
-  <references>
-  <name>Informative References</name>
-    <reference anchor="LEGAL" target="http://trustee.ietf.org/docs/IETF-Trust-License-Policy.pdf">
-      <front>
-        <title abbrev="Legal Provisions">Legal Provisions Relating to IETF Documents</title>
-        <author>
-          <organization>IETF Trust</organization>
-        </author>
-        <date month="November" year="2008"/>
-      </front>
-    </reference>
   </references>
 </references>
 
