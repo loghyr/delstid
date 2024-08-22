@@ -66,7 +66,8 @@
   <name>Introduction</name>
   <t>
     In the Network File System version4 (NFSv4), a client may be granted
-    a delegation for a file. This allows the client to act as the
+    a delegation for a file (see Section 1.8.4 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>). This allows the client to act as the
     authority for the file's metadata and data. This document presents
     a number of extensions which enhance the functionality of opens and
     delegations. These allow the client to:
@@ -82,7 +83,7 @@
     </li>
     <li>
       during the OPEN procedure, retrieve either the open stateid
-      (see Section 8.2 <xref target="RFC8881"
+      (see Section 8.2 of <xref target="RFC8881"
       format="default" sectionFormat="of"/>) or
       delegation stateid, but not both simultaneously.
     </li>
@@ -191,9 +192,6 @@
 ///
 /// typedef bool            fattr4_offline;
 ///
-]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const FATTR4_OFFLINE            = 83;
 ///
@@ -269,9 +267,6 @@
 ///   bitmap4  oa_create_mode;
 /// };
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_access4 {
 ///    OPEN_ARGS_SHARE_ACCESS_READ  = 1,
@@ -279,9 +274,6 @@
 ///    OPEN_ARGS_SHARE_ACCESS_BOTH  = 3
 /// };
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_deny4 {
 ///    OPEN_ARGS_SHARE_DENY_NONE  = 0,
@@ -290,9 +282,6 @@
 ///    OPEN_ARGS_SHARE_DENY_BOTH  = 3
 /// };
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_share_access_want4 {
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_ANY_DELEG           = 3,
@@ -306,9 +295,6 @@
 ///    OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 21
 /// };
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_open_claim4 {
 ///    OPEN_ARGS_OPEN_CLAIM_NULL          = 0,
@@ -320,9 +306,6 @@
 ///    OPEN_ARGS_OPEN_CLAIM_DELEG_PREV_FH = 6
 /// };
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// enum open_args_createmode4 {
 ///    OPEN_ARGS_CREATEMODE_UNCHECKED4     = 0,
@@ -331,30 +314,18 @@
 ///    OPEN_ARGS_CREATE_MODE_EXCLUSIVE4_1  = 3
 /// };
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// typedef open_arguments4 fattr4_open_arguments;
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// %/*
 /// % * Determine what OPEN supports.
 /// % */
 /// const FATTR4_OPEN_ARGUMENTS     = 86;
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION = 0x200000;
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_RESULT_NO_OPEN_STATEID = 0x00000010;
 ///
@@ -547,7 +518,7 @@
   </t>
 
   <section anchor="ssec_proxy_use" numbered="true" removeInRFC="false" toc="default">
-    <name>Use case</name>
+    <name>Use case: NFSv3 client proxy</name>
     <t>
       Consider a NFSv3 client which wants to access data on a server
       which only supports NFSv4.2.  An implementation may introduce an
@@ -573,9 +544,6 @@
 /// typedef nfstime4        fattr4_time_deleg_access;
 /// typedef nfstime4        fattr4_time_deleg_modify;
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// %/*
 /// % * New RECOMMENDED Attribute for
@@ -584,9 +552,6 @@
 /// const FATTR4_TIME_DELEG_ACCESS  = 84;
 /// const FATTR4_TIME_DELEG_MODIFY  = 85;
 ///
- ]]>
-    </sourcecode>
-    <sourcecode name="" type="" markers="true"><![CDATA[
 ///
 /// const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000;
 ///
