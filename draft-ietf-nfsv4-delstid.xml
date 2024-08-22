@@ -82,7 +82,7 @@
     </li>
     <li>
       during the OPEN procedure, retrieve either the open stateid
-      (see Section 9.1.4 <xref target="RFC7530"
+      (see Section 8.2 <xref target="RFC8881"
       format="default" sectionFormat="of"/>) or
       delegation stateid, but not both simultaneously.
     </li>
@@ -157,20 +157,22 @@
     be immediately thrown away or returned.
   </t>
   <t>
-    A compound with a GETATTR (see Section 18.7 of <xref target="RFC8881"
-    format="default" sectionFormat="of"/>)  or READDIR (see Section 18.23
-    of <xref target="RFC8881" format="default" sectionFormat="of"/>)
-    can report the file's attributes without bringing the file online.
-    However, either an OPEN or a LAYOUTGET (see Section 18.43 of <xref
-    target="RFC8881" format="default" sectionFormat="of"/>)  might cause
-    the file server to retrieve the archived data contents, bringing
-    the file online.  For non-parallel NFS (pNFS) systems (see Section
-    12 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
-    , the OPEN operation requires a filehandle to the data content. For
-    pNFS systems, the filehandle retrieved from an OPEN need not cause
-    the data content to be retrieved. But when the LAYOUTGET operation
-    is processed, a layout type specific mapping will cause the data
-    content to be retrieved from offline storage.
+    A compound (see Section 2.3 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>) with a GETATTR (see Section 18.7 of <xref
+    target="RFC8881" format="default" sectionFormat="of"/>) or READDIR
+    (see Section 18.23 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>) can report the file's attributes without
+    bringing the file online.  However, either an OPEN or a LAYOUTGET
+    (see Section 18.43 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>)  might cause the file server to retrieve the
+    archived data contents, bringing the file online.  For non-parallel
+    NFS (pNFS) systems (see Section 12 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>) , the OPEN operation
+    requires a filehandle to the data content. For pNFS systems, the
+    filehandle retrieved from an OPEN need not cause the data content
+    to be retrieved. But when the LAYOUTGET operation is processed,
+    a layout type specific mapping will cause the data content to be
+    retrieved from offline storage.
   </t>
   <t>
     If the client is not aware that the file is offline, it might
@@ -393,10 +395,10 @@
   <t>
     The client is already prepared to not get a delegation
     stateid even if requested. In order to not send an open
-    stateid, the server can indicate that fact with the result
+    stateid, the server <bcp14>MUST</bcp14> indicate that fact with the result
     flag of OPEN4_RESULT_NO_OPEN_STATEID. The open stateid field,
     OPEN4resok.stateid (see Section 18.16.2 of <xref target="RFC8881"
-    format="default" sectionFormat="of"/>), will  also be set to the
+    format="default" sectionFormat="of"/>), will <bcp14>MUST</bcp14> be set to the
     special all zero stateid.
   </t>
   <section anchor="delstid_analysis" numbered="true" removeInRFC="false" toc="default">
@@ -497,7 +499,7 @@
     appropriate delegation.  The SETATTR <bcp14>SHOULD</bcp14> either be
     in a separate compound before the one containing the DELEGRETURN or
     when in the same compound, as an operation before the DELEGRETURN.
-    Failure to properly sequence the operations may lead to race cases.
+    Failure to properly sequence the operations may lead to race conditions.
   </t>
   <t>
     A key prerequisite of this approach is that the server and client are
@@ -670,8 +672,6 @@ sh extract.sh < spec.txt > delstid_prot.x
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml"/>
-    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
-       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7530.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
