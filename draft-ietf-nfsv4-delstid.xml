@@ -44,8 +44,7 @@
       provides the client the right to authoritatively cache metadata
       on the file locally.  This document presents several extensions
       for both the opening and delegating of the file to
-      the client. This document extends both NFSv4.1 (see RFC8881)
-      and NFSv4.2 (see RFC7863).
+      the client. This document extends NFSv4.2 (see RFC7863).
     </t>
   </abstract>
 
