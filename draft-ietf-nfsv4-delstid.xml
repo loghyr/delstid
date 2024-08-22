@@ -81,13 +81,15 @@
       supported by the server.
     </li>
     <li>
-      during the OPEN procedure, get either the open
-      or delegation stateids, but not both.
+      during the OPEN procedure, retrieve either the open stateid
+      (see Section 9.1.4 <xref target="RFC7530"
+      format="default" sectionFormat="of"/>) or
+      delegation stateid, but not both simultaneously.
     </li>
     <li>
-      cache both the access and modify times, reducing the
-      number of times the client needs to go to the server
-      to get that information.
+      cache both the access and modify timestamps, thereby reducing
+      the frequency with which the client must query the server for
+      this information.
     </li>
   </ul>
 
@@ -155,11 +157,16 @@
     be immediately thrown away or returned.
   </t>
   <t>
-    A compound with a GETATTR or READDIR can report the file's attributes
-    without bringing the file online.  However, either an OPEN or a
-    LAYOUTGET might cause the file server to retrieve the archived
-    data contents, bringing the file online.  For non-pNFS systems,
-    the OPEN operation requires a filehandle to the data content. For
+    A compound with a GETATTR (see Section 18.7 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>)  or READDIR (see Section 18.23
+    of <xref target="RFC8881" format="default" sectionFormat="of"/>)
+    can report the file's attributes without bringing the file online.
+    However, either an OPEN or a LAYOUTGET (see Section 18.43 of <xref
+    target="RFC8881" format="default" sectionFormat="of"/>)  might cause
+    the file server to retrieve the archived data contents, bringing
+    the file online.  For non-parallel NFS (pNFS) systems (see Section
+    12 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
+    , the OPEN operation requires a filehandle to the data content. For
     pNFS systems, the filehandle retrieved from an OPEN need not cause
     the data content to be retrieved. But when the LAYOUTGET operation
     is processed, a layout type specific mapping will cause the data
@@ -168,7 +175,7 @@
   <t>
     If the client is not aware that the file is offline, it might
     inadvertently open the file to determine what type of file it
-    is accessing.  By interrogating the new attribute FATTR4_OFFLINE,
+    is accessing.  By interrogating the new attribute fattr4_offline,
     a client can predetermine the availability of the file, avoiding the
     need to open it at all. Being offline might also involve situations
     in which the file is archived in the cloud, i.e., there can be an
@@ -379,7 +386,7 @@
   <t>
     If the client knows that the server supports the
     OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag (as determined by an
-    earlier GETATTR operation which queried for the FATTR4_OPEN_ARGUMENTS
+    earlier GETATTR operation which queried for the fattr4_open_arguments
     attribute), then the client can supply that flag during the OPEN
     and only get either an open or delegation stateid.
   </t>
@@ -447,8 +454,11 @@
     that other clients can have access to these values.  While the
     client could send a compound of the form: SEQ, PUTFH,
     SETATTR (time_modify | time_access), DELEGRETURN, to notify
-    the server of the proxied values, that SETATTR operation would
-    cause either or both of FATTR4_CHANGE or FATTR4_TIME_METADATA to
+    the server of the proxied values, that SETATTR (see Section 18.30 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>) operation would
+    cause either or both of change (see Section 5.8.1.4 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>) or time_metadata (see Section 5.8.2.42 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>) to
     be modified to the current time on the server.
     There is no current provision to obtain these values before delegation
     return using CB_GETATTR. As a result, it can not pass these times up
@@ -468,19 +478,17 @@
     sectionFormat="of"/>).
   </t>
   <t>
-    If a server informs the client via the FATTR4_OPEN_ARGUMENTS attribute
+    If a server informs the client via the fattr4_open_arguments attribute
     that it supports OPEN_ARGS_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS and
     it returns a valid delegation stateid for an OPEN operation which
     sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag, then it
     <bcp14>MUST</bcp14> query the client via a CB_GETATTR for the
-    FATTR4_TIME_DELEG_ACCESS(see <xref target="ssec_proxy_xdr"/>)  attribute and FATTR4_TIME_DELEG_MODIFY
+    fattr4_time_deleg_access (see <xref target="ssec_proxy_xdr"/>) attribute and fattr4_time_deleg_modify
     attribute (see <xref target="ssec_proxy_xdr"/>). (The change time can be derived from the modify
-    time.) Further, when it gets a SETATTR (see Section 18.34 of <xref
-    target="RFC8881" format="default" sectionFormat="of"/>) in the same
-    compound as the DELEGRETURN, then it <bcp14>MUST</bcp14> accept
-    those FATTR4_TIME_DELEG_ACCESS attribute and FATTR4_TIME_DELEG_MODIFY
+    time.) Further, when it gets a SETATTR in the same compound as the DELEGRETURN, then it <bcp14>MUST</bcp14> accept
+    those fattr4_time_deleg_access attribute and fattr4_time_deleg_modify
     attribute changes and derive the change time or reject the changes
-    with NFS4ERR_DELAY (see Section 15.1.1.3 if <xref target="RFC8881" format="default"
+    with NFS4ERR_DELAY (see Section 15.1.1.3 of <xref target="RFC8881" format="default"
     sectionFormat="of"/>).
   </t>
   <t>
@@ -496,10 +504,12 @@
     in time synchronization with each other.  Note that while the base
     NFSv4.2 does not require such synchronization, the use of RPCSEC_GSS
     typically makes such a requirement. When the client presents either
-    FATTR4_TIME_DELEG_ACCESS or FATTR4_TIME_DELEG_MODIFY attributes
+    fattr4_time_deleg_access or fattr4_time_deleg_modify attributes
     to the server, the server <bcp14>MUST</bcp14> decide for both of
     them whether the time presented is before the corresponding
-    FATTR4_TIME_ACCESS or FATTR4_TIME_MODIFY attribute
+    time_access (see Section 5.8.2.37 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>) or time_modify (see Section 5.8.2.43 of <xref target="RFC8881" format="default"
+    sectionFormat="of"/>)  attribute
     on the file or past the current server time.
     When the time presented is before the original time, then the update
     is ignored. When the time presented is in the future, the server
@@ -529,8 +539,8 @@
   <t>
     If the client sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS
     flag in an OPEN operation, then it <bcp14>MUST</bcp14> support
-    the FATTR4_TIME_DELEG_ACCESS
-    and FATTR4_TIME_DELEG_MODIFY attributes both in the CB_GETATTR
+    the fattr4_time_deleg_access
+    and fattr4_time_deleg_modify attributes both in the CB_GETATTR
     and SETATTR operations.
   </t>
 
@@ -538,14 +548,15 @@
     <name>Use case</name>
     <t>
       Consider a NFSv3 client which wants to access data on a server
-      which only supports NFSv4.2. An implementation could add a NFSv3
-      server which is a NFSv4.2 client gateway the two incompatible
-      systems.  As NFSv3 is a stateless protocol, the state is not kept
-      on the client, but rather the NFSv3 server. As the NFSv3 server
-      is already managing the state, it can proxy file delegations to
-      avoid spurious GETATTRs.  I.e., as the client queries the NFSv3
-      server for the attributes, they can be served without the NFSv3
-      server sending a GETATTR to the NFSv4.2 server.
+      which only supports NFSv4.2.  An implementation may introduce an
+      NFSv3 server that functions as an NFSv4.2 client, serving as a
+      gateway between the two otherwise incompatible systems.  As NFSv3
+      is a stateless protocol, the state is not kept on the client, but
+      rather the NFSv3 server. As the NFSv3 server is already managing the
+      state, it can proxy file delegations to avoid spurious GETATTRs.
+      I.e., as the client queries the NFSv3 server for the attributes,
+      they can be served without the NFSv3 server sending a GETATTR to
+      the NFSv4.2 server.
     </t>
   </section>
 
@@ -659,6 +670,8 @@ sh extract.sh < spec.txt > delstid_prot.x
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4506.xml"/>
+    <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
+       href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7530.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
        href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7862.xml"/>
     <xi:include xmlns:xi="http://www.w3.org/2001/XInclude"
