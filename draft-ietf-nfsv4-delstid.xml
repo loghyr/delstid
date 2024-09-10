@@ -250,7 +250,7 @@
     <bcp14>REQUIRED</bcp14> flags and <bcp14>OPTIONAL</bcp14> flags
     which become <bcp14>REQUIRED</bcp14> in the future.  The server
     <bcp14>MUST</bcp14> mark <bcp14>REQUIRED</bcp14> flags as being supported.
-    Note that as these flags <bcp14>MUST</bcp14> only change from
+    Note that these flags <bcp14>MUST</bcp14> only change from
     <bcp14>OPTIONAL</bcp14> to <bcp14>REQUIRED</bcp14> when the NFSv4
     minor version is incremented.
   </t>
@@ -369,8 +369,8 @@
     stateid, the server <bcp14>MUST</bcp14> indicate that fact with the result
     flag of OPEN4_RESULT_NO_OPEN_STATEID. The open stateid field,
     OPEN4resok.stateid (see Section 18.16.2 of <xref target="RFC8881"
-    format="default" sectionFormat="of"/>), will <bcp14>MUST</bcp14> be set to the
-    special all zero stateid.
+    format="default" sectionFormat="of"/>), <bcp14>MUST</bcp14> be set to the
+    special all zero stateid in this case.
   </t>
   <section anchor="delstid_analysis" numbered="true" removeInRFC="false" toc="default">
   <name>Implementation Experience</name>
@@ -394,6 +394,14 @@
       18.6 of <xref target="RFC8881" format="default" sectionFormat="of"/>)
       to return the delegation stateid.
     </t>
+    <sourcecode name="" type="" markers="true"><![CDATA[
+      SEQ PUTFH OPEN GETFH GETATTR
+      SEQ PUTFH WRITE GETATTR
+      SEQ PUTFH CLOSE
+      ...
+      SEQ PUTFH DELEGRETURN
+]]>
+    </sourcecode>
     <t>
       With the proposed approach of setting the
       OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag during
@@ -404,6 +412,14 @@
       via delegation recall or garbage collection causes the client to
       return the stateid.
     </t>
+    <sourcecode name="" type="" markers="true"><![CDATA[
+      SEQ PUTFH OPEN(OPEN_ARGS_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION)
+          GETFH GETATTR
+      SEQ PUTFH WRITE GETATTR
+      ...
+      SEQ PUTFH DELEGRETURN
+]]>
+    </sourcecode>
     <t>
       This approach reduces the cost of synchronous operations by 33%
       and the total number of operations by 25%. Contrast that against
@@ -601,7 +617,7 @@ sh extract.sh < spec.txt > delstid_prot.x
   <t>
     While the XDR can be appended to that from
     <xref target="RFC7863" format="default" sectionFormat="of"/>,
-    the various code snippets belong in their respective areas of the
+    the various code snippets belong in their respective areas of
     that XDR.
   </t>
 </section>
