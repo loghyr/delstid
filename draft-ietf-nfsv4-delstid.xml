@@ -472,13 +472,15 @@
     it returns a valid delegation stateid for an OPEN operation which
     sets the OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS flag, then it
     <bcp14>MUST</bcp14> query the client via a CB_GETATTR for the
-    fattr4_time_deleg_access (see <xref target="ssec_proxy_xdr"/>) attribute and fattr4_time_deleg_modify
-    attribute (see <xref target="ssec_proxy_xdr"/>). (The change time can be derived from the modify
-    time.) Further, when it gets a SETATTR in the same compound as the DELEGRETURN, then it <bcp14>MUST</bcp14> accept
-    those fattr4_time_deleg_access attribute and fattr4_time_deleg_modify
+    fattr4_time_deleg_access (see <xref target="ssec_proxy_xdr"/>)
+    attribute and fattr4_time_deleg_modify attribute (see <xref
+    target="ssec_proxy_xdr"/>). (The change time can be derived from
+    the modify time.) Further, when it gets a SETATTR with those
+    attributes being set, then it <bcp14>MUST</bcp14> accept those
+    fattr4_time_deleg_access attribute and fattr4_time_deleg_modify
     attribute changes and derive the change time or reject the changes
-    with NFS4ERR_DELAY (see Section 15.1.1.3 of <xref target="RFC8881" format="default"
-    sectionFormat="of"/>).
+    with NFS4ERR_DELAY (see Section 15.1.1.3 of <xref target="RFC8881"
+    format="default" sectionFormat="of"/>).
   </t>
   <t>
     These new attributes are invalid to be used with GETATTR, VERIFY, and NVERIFY and
