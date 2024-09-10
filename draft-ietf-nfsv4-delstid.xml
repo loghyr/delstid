@@ -671,7 +671,7 @@ sh extract.sh < spec.txt > delstid_prot.x
 <section numbered="true" removeInRFC="false" toc="default">
       <name>Acknowledgments</name>
       <t>
-        Trond Myklebust and David Flynn
+        Trond Myklebust, Tom Haynes, and David Flynn
         all worked on the prototype at Hammerspace.
       </t>
       <t>
