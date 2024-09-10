@@ -4,7 +4,7 @@
 YEAR=`date +%Y`
 MONTH=`date +%B`
 DAY=`date +%d`
-VERS=07
+VERS=08
 
 BASEDOC=draft-ietf-nfsv4-delstid
 
