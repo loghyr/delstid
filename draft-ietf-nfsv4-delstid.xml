@@ -372,6 +372,26 @@
     format="default" sectionFormat="of"/>), <bcp14>MUST</bcp14> be set to the
     special all zero stateid in this case.
   </t>
+  <t>
+    Note that the OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION flag
+    is a hint. The server might return both stateids. Consider
+    the scenario in which the client opens a file read-only (with
+    OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION set) and gets only
+    an open stateid. If the client then opens the file for read-write
+    (with OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION set), then
+    the server has three options:
+  </t>
+  <ol>
+    <li>Only an open stateid with the correct seqid.</li>
+    <li>Only a delegation stateid with the open stateid now having an incorrect seqid as it needs to be upgraded.</li>
+    <li>Both an open (which will be upgraded) and a delegation stateid.</li>
+  </ol>
+  <t>
+    In this scenario, returning just a delegation stateid would hide information
+    from the client. If the client already has an open stateid, then the
+    server <bcp14>SHOULD</bcp14> ignore the OPEN4_SHARE_ACCESS_WANT_OPEN_XOR_DELEGATION
+    flag and return both the open and delegation stateids.
+  </t>
   <section anchor="delstid_analysis" numbered="true" removeInRFC="false" toc="default">
   <name>Implementation Experience</name>
     <t>
@@ -677,6 +697,9 @@ sh extract.sh < spec.txt > delstid_prot.x
       <t>
         Dave Noveck, Chuck Lever, Rick Macklem, and Zaheduzzaman Sarker
         provided reviews of the document.
+      </t>
+      <t>
+        Jeff Layton provided experience from an implementation he authored.
       </t>
     </section>
 
