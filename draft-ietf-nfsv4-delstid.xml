@@ -503,6 +503,14 @@
     format="default" sectionFormat="of"/>).
   </t>
   <t>
+      When the server grants a delegation stateid, it <bcp14>MUST</bcp14>
+      set either OPEN_DELEGATE_READ_ATTRS_DELEG or OPEN_DELEGATE_WRITE_ATTRS_DELEG
+      in the open_delegation_type4 (see Section 18.16.1 of <xref target="RFC8881"
+      format="default" sectionFormat="of"/>) response to indicate whether
+      the client has been granted read or write attribute support via
+      the delegation.
+  </t>
+  <t>
     These new attributes are invalid to be used with GETATTR, VERIFY, and NVERIFY and
     can only be used with CB_GETATTR and SETATTR by a  client holding an
     appropriate delegation.  The SETATTR <bcp14>SHOULD</bcp14> either be
@@ -582,7 +590,6 @@
 /// typedef nfstime4        fattr4_time_deleg_access;
 /// typedef nfstime4        fattr4_time_deleg_modify;
 ///
-///
 /// %/*
 /// % * New RECOMMENDED Attribute for
 /// % * delegation caching of times
@@ -590,9 +597,16 @@
 /// const FATTR4_TIME_DELEG_ACCESS  = 84;
 /// const FATTR4_TIME_DELEG_MODIFY  = 85;
 ///
-///
 /// const OPEN4_SHARE_ACCESS_WANT_DELEG_TIMESTAMPS = 0x100000;
 ///
+/// enum open_delegation_type4 {
+///        OPEN_DELEGATE_NONE                  = 0,
+///        OPEN_DELEGATE_READ                  = 1,
+///        OPEN_DELEGATE_WRITE                 = 2,
+///        OPEN_DELEGATE_NONE_EXT              = 3, /* new to v4.1 */
+///        OPEN_DELEGATE_READ_ATTRS_DELEG      = 4,
+///        OPEN_DELEGATE_WRITE_ATTRS_DELEG     = 5
+/// };
  ]]>
     </sourcecode>
   </section>
