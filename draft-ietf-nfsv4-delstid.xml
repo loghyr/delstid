@@ -197,6 +197,12 @@
 ///
 ]]>
     </sourcecode>
+
+    <t>
+      According to Table 5 in Section 5.7 of <xref target="RFC8881"
+      format="default" sectionFormat="of"/>, offline has an Access
+      type of R.
+    </t>
   </section>
 </section>
 
@@ -331,6 +337,12 @@
 ///
  ]]>
     </sourcecode>
+
+    <t>
+      According to Table 5 in Section 5.7 of <xref target="RFC8881"
+      format="default" sectionFormat="of"/>, open_arguments has an Access
+      type of R.
+    </t>
   </section>
 </section>
 
@@ -611,6 +623,13 @@
 /// };
  ]]>
     </sourcecode>
+
+    <t>
+      According to Table 5 in Section 5.7 of <xref target="RFC8881"
+      format="default" sectionFormat="of"/>, both time_deleg_access
+      and time_deleg_modify have an Access
+      type of "R W".
+    </t>
   </section>
 </section>
 
